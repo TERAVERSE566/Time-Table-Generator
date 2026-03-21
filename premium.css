@@ -1,0 +1,130 @@
+/* premium.css - Auto-injected premium aesthetic overrides */
+/* NOTE: Admin dashboard has its own dark theme — these overrides are scoped to exclude it */
+
+:root {
+    --primary: #4f46e5 !important;
+    --primary-light: #6366f1 !important;
+    --navy: #4f46e5 !important;
+    --navy-light: #818cf8 !important;
+    --gold: #f59e0b !important;
+    --gold-light: #fcd34d !important;
+    --accent: #f59e0b !important;
+    --bg-light: #f8fafc !important;
+    --shadow-sm: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1) !important;
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+}
+
+body:not(.theme-admin) {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
+    background-attachment: fixed !important;
+}
+
+/* Glassmorphism for components — NOT on admin */
+body:not(.theme-admin) .navbar,
+body:not(.theme-admin) .header-section,
+body:not(.theme-admin) .profile-card,
+body:not(.theme-admin) .stat-card,
+body:not(.theme-admin) .schedule-card,
+body:not(.theme-admin) .tasks-card,
+body:not(.theme-admin) .card,
+body:not(.theme-admin) .glass-panel {
+    background: rgba(255, 255, 255, 0.7) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+    box-shadow: var(--shadow-md) !important;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+body:not(.theme-admin) .card:hover,
+body:not(.theme-admin) .stat-card:hover,
+body:not(.theme-admin) .course-mini:hover,
+body:not(.theme-admin) .timeline-card:hover {
+    transform: translateY(-5px) !important;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+}
+
+/* Button enhancements — NOT on admin */
+body:not(.theme-admin) .btn-solid,
+body:not(.theme-admin) .btn-primary,
+body:not(.theme-admin) .action-btn {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%) !important;
+    box-shadow: 0 4px 14px 0 rgba(79, 70, 229, 0.39) !important;
+    border: none !important;
+    transition: all 0.3s ease !important;
+}
+
+body:not(.theme-admin) .btn-solid:hover,
+body:not(.theme-admin) .btn-primary:hover,
+body:not(.theme-admin) .action-btn:hover {
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 20px rgba(79, 70, 229, 0.5) !important;
+}
+
+body:not(.theme-admin) .btn-outline {
+    background: rgba(255,255,255,0.5) !important;
+    backdrop-filter: blur(5px) !important;
+    border: 2px solid var(--primary-light) !important;
+}
+
+body:not(.theme-admin) .btn-outline:hover {
+    background: var(--primary-light) !important;
+    color: white !important;
+}
+
+/* Inputs — NOT on admin */
+body:not(.theme-admin) input,
+body:not(.theme-admin) select {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1px solid rgba(0,0,0,0.1) !important;
+    transition: all 0.3s ease !important;
+}
+
+body:not(.theme-admin) input:focus,
+body:not(.theme-admin) select:focus {
+    background: #fff !important;
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2) !important;
+    outline: none !important;
+}
+
+/* Table Enhancements — NOT on admin */
+body:not(.theme-admin) table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    background: rgba(255, 255, 255, 0.6) !important;
+    backdrop-filter: blur(8px) !important;
+    border-radius: 1rem !important;
+    overflow: hidden !important;
+}
+body:not(.theme-admin) th {
+    background: rgba(79, 70, 229, 0.1) !important;
+    color: var(--primary) !important;
+    font-weight: 700 !important;
+}
+body:not(.theme-admin) td {
+    border-bottom: 1px solid rgba(0,0,0,0.05) !important;
+}
+body:not(.theme-admin) tr:hover td {
+    background: rgba(79, 70, 229, 0.03) !important;
+}
+
+/* Role-based Themes */
+body.theme-admin {
+    --primary: #0f172a !important; /* Deep Slate/Navy */
+    --primary-light: #334155 !important;
+    --navy: var(--primary) !important;
+    --navy-light: var(--primary-light) !important;
+}
+body.theme-faculty {
+    --primary: #065f46 !important; /* Forest Emerald */
+    --primary-light: #10b981 !important;
+    --navy: var(--primary) !important;
+    --navy-light: var(--primary-light) !important;
+}
+body.theme-student {
+    --primary: #9d174d !important; /* Crimson Pink */
+    --primary-light: #db2777 !important;
+    --navy: var(--primary) !important;
+    --navy-light: var(--primary-light) !important;
+}
