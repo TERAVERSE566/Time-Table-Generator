@@ -1,22 +1,8 @@
 <?php
 // setup_db.php - Initialization script for database and tables
-$host = "localhost";
-$user = "root";
-$pass = "Anish566@@"; 
-
-mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+require_once 'db.php';
 
 try {
-    // Connect without DB first
-    $conn = new mysqli($host, $user, $pass);
-    
-    // Create database if not exists
-    $sql_db = "CREATE DATABASE IF NOT EXISTS timetablegen CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci";
-    $conn->query($sql_db);
-    echo "Database created/verified.\n";
-    
-    // Select the DB
-    $conn->select_db("timetablegen");
 
     // 1. Users Table
     $sql_users = "
