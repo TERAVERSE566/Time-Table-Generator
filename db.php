@@ -1,9 +1,18 @@
 <?php
 // db.php - Database connection for TimetableGen
-$host = "localhost";
-$user = "root";
-$pass = "Anish566@@"; 
-$db   = "timetablegen";
+if ($_SERVER['HTTP_HOST'] == "localhost" || $_SERVER['HTTP_HOST'] == "127.0.0.1") {
+    // Localhost XAMPP credentials
+    $host = "localhost";
+    $user = "root";
+    $pass = "Anish566@@"; 
+    $db   = "timetablegen";
+} else {
+    // InfinityFree Live credentials
+    $host = "sql103.infinityfree.com";
+    $user = "if0_41443046";
+    $pass = "Anish002005"; 
+    $db   = "if0_41443046_timetable";
+}
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
