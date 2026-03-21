@@ -15,6 +15,7 @@ try {
         phone VARCHAR(20) NULL,
         program_level VARCHAR(50) NULL,
         department VARCHAR(50) NULL,
+        current_semester INT DEFAULT 1,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
     $conn->query($sql_users);
