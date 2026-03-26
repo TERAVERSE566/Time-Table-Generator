@@ -554,7 +554,7 @@ session_start();
             <div class="footer-col">
                 <h4>Tools</h4>
                 <a href="generator.php">Timetable Generator</a>
-                <a href="table view.php">Schedule Viewer</a>
+                <a href="table_view.php">Schedule Viewer</a>
                 <a href="analysis.php">Analytics Dashboard</a>
                 <a href="help.php">Help & Docs</a>
             </div>

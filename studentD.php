@@ -438,7 +438,7 @@ if ($row = $res->fetch_assoc()) {
             <!-- quick actions -->
             <div class="quick-actions">
                 <button class="action-btn" id="qrBtn"><i class="fas fa-qrcode"></i> Mark Attendance</button>
-                <button class="action-btn" onclick="window.location.href='table view.php'"><i class="fas fa-calendar-week"></i> Full Schedule</button>
+                <button class="action-btn" onclick="window.location.href='table_view.php'"><i class="fas fa-calendar-week"></i> Full Schedule</button>
                 <button class="action-btn"><i class="fas fa-calculator"></i> Grade Calc</button>
                 <button class="action-btn"><i class="fas fa-users"></i> Study Group</button>
             </div>

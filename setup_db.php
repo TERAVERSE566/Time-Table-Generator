@@ -1,5 +1,6 @@
 <?php
 // setup_db.php - Initialization script for database and tables
+die('Setup is disabled for security.');
 require_once 'db.php';
 
 try {

@@ -503,7 +503,7 @@ $initials = strtoupper(substr($user_name, 0, 1) . (strpos($user_name, ' ') ? sub
 
             <!-- Weekly timetable mini -->
             <div class="schedule-card">
-                <h3>🗓️ Weekly Timetable <button class="btn-sm" onclick="window.location.href='table view.php'" style="margin-left:1rem;">Full View</button></h3>
+                <h3>🗓️ Weekly Timetable <button class="btn-sm" onclick="window.location.href='table_view.php'" style="margin-left:1rem;">Full View</button></h3>
                 <div class="week-grid">
                     <div class="day-col">Mon <div class="class-block">CS501 10am</div><div class="class-block">CS410 12pm</div></div>
                     <div class="day-col">Tue <div class="class-block">CS307 2pm</div></div>

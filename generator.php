@@ -15,12 +15,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $courses = json_decode($_POST['courses'], true); // array of course IDs
     $facultyMap = json_decode($_POST['facultyMap'], true); // course_id => faculty_id
 
-    // Create Timetable record
-    $deptResult = $conn->query("SELECT id FROM departments WHERE name='$dept' OR code='$dept' LIMIT 1");
+    // Create Timetable record securely
+    $stmtDept = $conn->prepare("SELECT id FROM departments WHERE name=? OR code=? LIMIT 1");
+    $stmtDept->bind_param("ss", $dept, $dept);
+    $stmtDept->execute();
+    $deptResult = $stmtDept->get_result();
     $dept_id = ($deptResult->num_rows > 0) ? $deptResult->fetch_assoc()['id'] : 1; 
-    
-    $ins = $conn->query("INSERT INTO timetables (department_id, program_level, semester, status) VALUES ($dept_id, 'UG', $sem, 'Published')");
-    $tt_id = $conn->insert_id;
+
+    $stmtTt = $conn->prepare("INSERT INTO timetables (department_id, program_level, semester, status) VALUES (?, 'UG', ?, 'Published')");
+    $stmtTt->bind_param("ii", $dept_id, $sem);
+    $stmtTt->execute();
+    $tt_id = $stmtTt->insert_id;
 
     // Fetch all timeslots and rooms to build schedule
     $tsRes = $conn->query("SELECT id, day_of_week, start_time, end_time FROM time_slots ORDER BY day_of_week, start_time");
@@ -31,33 +36,64 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $allRooms = [];
     while($r = $rmRes->fetch_assoc()) $allRooms[] = $r;
 
-    // Very simple greedy scheduler
+    // Cache names to avoid queries in the loop
+    $cNames = [];
+    $resC = $conn->query("SELECT id, course_name FROM courses");
+    while($r = $resC->fetch_assoc()) $cNames[$r['id']] = $r['course_name'];
+
+    $fNames = [];
+    $resF = $conn->query("SELECT id, name FROM users WHERE role='faculty'");
+    while($r = $resF->fetch_assoc()) $fNames[$r['id']] = $r['name'];
+
+    // Robust Sequential Scheduler
     $entries = [];
-    $slotIdx = 0;
+    $used_student_slots = []; // [slot_id] => true
+    $used_faculty_slots = []; // [faculty_id][slot_id] => true
+    $used_room_slots = [];    // [room_id][slot_id] => true
+    
+    $stmtInsert = $conn->prepare("INSERT INTO timetable_entries (timetable_id, course_id, faculty_id, room_id, time_slot_id) VALUES (?, ?, ?, ?, ?)");
+
     foreach($courses as $cid) {
-        // assign 3 slots for each course (3 credits dummy)
-        for($i=0; $i<3; $i++) {
-            if ($slotIdx >= count($allSlots)) $slotIdx = 0;
-            $slot = $allSlots[$slotIdx];
-            $room = $allRooms[array_rand($allRooms)];
-            $fid = $facultyMap[$cid] ?? 0;
+        $slotsRequired = 3;
+        $slotsAssigned = 0;
+        $fid = isset($facultyMap[$cid]) ? (int)$facultyMap[$cid] : 0;
+        
+        foreach($allSlots as $slot) {
+            if ($slotsAssigned >= $slotsRequired) break;
+            $slotId = $slot['id'];
             
-            $conn->query("INSERT INTO timetable_entries (timetable_id, course_id, faculty_id, room_id, time_slot_id) 
-                          VALUES ($tt_id, ".(int)$cid.", ".(int)$fid.", {$room['id']}, {$slot['id']})");
+            // Conflict checks
+            if (isset($used_student_slots[$slotId])) continue; // students are busy in this slot
+            if ($fid > 0 && isset($used_faculty_slots[$fid][$slotId])) continue; // faculty is busy in this slot
             
-            // fetch names for frontend response
-            $cName = $conn->query("SELECT course_name FROM courses WHERE id=$cid")->fetch_assoc()['course_name'] ?? 'Unknown';
-            $fName = $conn->query("SELECT name FROM users WHERE id=$fid")->fetch_assoc()['name'] ?? 'TBD';
+            // Find a free room
+            $pickedRoom = null;
+            foreach($allRooms as $room) {
+                if (!isset($used_room_slots[$room['id']][$slotId])) {
+                    $pickedRoom = $room;
+                    break;
+                }
+            }
+            if (!$pickedRoom) continue; // No rooms left for this slot
+            
+            // Assign slot
+            $used_student_slots[$slotId] = true;
+            if ($fid > 0) $used_faculty_slots[$fid][$slotId] = true;
+            $used_room_slots[$pickedRoom['id']][$slotId] = true;
+            
+            $stmtInsert->bind_param("iiiii", $tt_id, $cid, $fid, $pickedRoom['id'], $slotId);
+            $stmtInsert->execute();
             
             $entries[] = [
                 'day' => $slot['day_of_week'],
-                'start' => substr($slot['start_time'],0,5),
-                'end' => substr($slot['end_time'],0,5),
-                'course' => $cName,
-                'faculty' => $fName,
-                'room' => $room['name']
+                'start' => substr($slot['start_time'], 0, 5),
+                'end' => substr($slot['end_time'], 0, 5),
+                'course' => $cNames[$cid] ?? 'Unknown',
+                'faculty' => $fNames[$fid] ?? 'TBD',
+                'room' => $pickedRoom['name']
             ];
-            $slotIdx += 2; // stagger slots across days loosely
+            
+            $slotsAssigned++;
         }
     }
 
