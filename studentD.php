@@ -414,7 +414,7 @@ if ($row = $res->fetch_assoc()) {
                 <h3>👨‍🏫 Faculty Contacts</h3>
                 <p><i class="fas fa-envelope"></i> Dr. Chen · chen@college.edu (office hours Mon 3pm)</p>
                 <p><i class="fas fa-envelope"></i> Prof. Evans · evans@college.edu</p>
-                <button class="action-btn" style="padding:0.4rem 1rem;"><i class="fas fa-comment"></i> Message</button>
+                <button class="action-btn" style="padding:0.4rem 1rem;" onclick="window.location.href='messages.php?faculty=Prof.+Evans'"><i class="fas fa-comment"></i> Message</button>
             </div>
 
             <!-- study resources -->
@@ -437,10 +437,10 @@ if ($row = $res->fetch_assoc()) {
 
             <!-- quick actions -->
             <div class="quick-actions">
-                <button class="action-btn" id="qrBtn"><i class="fas fa-qrcode"></i> Mark Attendance</button>
+                <button class="action-btn" id="qrBtn" onclick="window.location.href='attendance.php'"><i class="fas fa-clipboard-check"></i> Attendance View</button>
                 <button class="action-btn" onclick="window.location.href='table_view.php'"><i class="fas fa-calendar-week"></i> Full Schedule</button>
-                <button class="action-btn" onclick="window.location.href='feature_preview.php?feature=Grade+Calculator'"><i class="fas fa-calculator"></i> Grade Calc</button>
-                <button class="action-btn" onclick="window.location.href='feature_preview.php?feature=Study+Group'"><i class="fas fa-users"></i> Study Group</button>
+                <button class="action-btn" onclick="window.location.href='grade_calc.php'"><i class="fas fa-calculator"></i> Grade Calc</button>
+                <button class="action-btn" onclick="window.location.href='study_group.php'"><i class="fas fa-users"></i> Study Group</button>
             </div>
         </div>
     </div>
