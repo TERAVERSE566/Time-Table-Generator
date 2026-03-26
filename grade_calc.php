@@ -123,9 +123,39 @@ function resetCalc() {
     calculate();
 }
 
-    // Scale it to 100% just to show current standing based on entered weights
-    const currentStanding = (earnedWeight / totalWeight) * 100;
+function calculate() {
+    let totalWeight = 0;
+    let earnedWeight = 0;
     
+    const rows = document.querySelectorAll('#rowsContainer .row');
+    rows.forEach(row => {
+        const score = parseFloat(row.querySelector('.score').value);
+        const max = parseFloat(row.querySelector('.max').value);
+        const weight = parseFloat(row.querySelector('.weight').value);
+        
+        if (!isNaN(weight)) totalWeight += weight;
+        
+        if (!isNaN(score) && !isNaN(max) && !isNaN(weight) && max > 0) {
+            earnedWeight += (score / max) * weight;
+        }
+    });
+    
+    const warning = document.getElementById('weightWarning');
+    if (totalWeight > 100) warning.style.display = 'block';
+    else warning.style.display = 'none';
+    
+    const gradeEl = document.getElementById('finalGrade');
+    const letterEl = document.getElementById('gradeLetter');
+    
+    if (totalWeight === 0) {
+        gradeEl.innerText = '--';
+        letterEl.innerText = 'Start entering scores...';
+        gradeEl.style.color = 'var(--gold)';
+        letterEl.style.color = 'white';
+        return;
+    }
+    
+    const currentStanding = (earnedWeight / totalWeight) * 100;
     gradeEl.innerText = currentStanding.toFixed(2) + '%';
     
     let color = 'white';
