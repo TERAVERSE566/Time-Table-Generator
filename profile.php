@@ -305,8 +305,15 @@ if (strpos($name, ' ') !== false) {
         body.dark-mode #toast { background: #6366f1 !important; color: white !important; }
     </style>
 </head>
-<body class="<?= htmlspecialchars($themeClass) ?>">>
+<body class="<?= htmlspecialchars($themeClass) ?>">
 <div class="container">
+    <?php
+        $dashLink = 'studentD.php';
+        if ($role === 'faculty') $dashLink = 'facultyD.php';
+        if ($role === 'admin') $dashLink = 'admin.php';
+    ?>
+    <a href="<?= $dashLink ?>" style="display:inline-block; margin-bottom:1.5rem; text-decoration:none; color:inherit; font-weight:600; font-size:1.1rem; transition:0.2s;" onmouseover="this.style.opacity=0.7" onmouseout="this.style.opacity=1"><i class="fas fa-arrow-left"></i> Back to Dashboard</a>
+
     <!-- header -->
     <div class="header-row">
         <div class="header-title">
