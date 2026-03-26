@@ -357,12 +357,24 @@ $themeClass = 'theme-admin';
             .sidebar { width: 70px; }
             .sidebar .logo span, .sidebar .menu-item span:not(.emoji), .sidebar .logout span { display: none; }
             .main { width: calc(100% - 70px); }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 600px) {
+            .sidebar { position: absolute; z-index: 1000; height: 100%; transform: translateX(-100%); }
+            .sidebar.active { transform: translateX(0); width: 200px; }
+            .sidebar.active .logo span, .sidebar.active .menu-item span:not(.emoji), .sidebar.active .logout span { display: inline; }
+            .main { width: 100%; }
+            .header-right .admin-profile span { display: none; }
+            .welcome-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .bottom-flex { flex-direction: column; }
         }
     </style>
     <link rel="stylesheet" href="premium.css">
 </head>
 <body class="<?= htmlspecialchars($themeClass) ?>">
-<div class="wrapper" id="dashboard">
+<div class="dashboard" id="dashboard">
 
     <!-- SIDEBAR (fixed left) -->
     <aside class="sidebar" id="sidebar">
@@ -511,7 +523,11 @@ $themeClass = 'theme-admin';
         const sidebar = document.getElementById('sidebar');
         const toggleBtn = document.getElementById('toggleSidebar');
         toggleBtn.addEventListener('click', () => {
-            sidebar.classList.toggle('collapsed');
+            if (window.innerWidth <= 600) {
+                sidebar.classList.toggle('active');
+            } else {
+                sidebar.classList.toggle('collapsed');
+            }
         });
 
         // ------ CURRENT DATE & TIME UPDATE (real-time clock) ------
