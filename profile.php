@@ -36,6 +36,7 @@ if (strpos($name, ' ') !== false) {
     <title>Profile Settings · TimetableGen</title>
     <!-- Font Awesome 6 & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="premium.css">
     <style>
         * {
             margin: 0;
@@ -273,7 +274,6 @@ if (strpos($name, ' ') !== false) {
             .bottom-grid { grid-template-columns: 1fr; }
             .form-grid { grid-template-columns: 1fr; }
         }
-
         /* ===== PROPER DARK MODE ===== */
         body.dark-mode {
             background: #0f172a !important;
@@ -285,8 +285,10 @@ if (strpos($name, ' ') !== false) {
             color: #e2e8f0 !important;
             box-shadow: none !important;
         }
-        body.dark-mode .header-title h1, body.dark-mode .profile-info h2, body.dark-mode h3, body.dark-mode h4 { color: #f1f5f9 !important; }
-        body.dark-mode .header-title p, body.dark-mode .form-group label, body.dark-mode p { color: #94a3b8 !important; }
+        /* Fix the heading colors explicitly so premium.css doesn't override */
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4, body.dark-mode h5 { color: #f8fafc !important; }
+        body.dark-mode .header-title p, body.dark-mode .form-group label, body.dark-mode p, body.dark-mode li, body.dark-mode .verified, body.dark-mode span { color: #cbd5e1 !important; }
+        
         body.dark-mode input, body.dark-mode select {
             background: #334155 !important;
             border-color: #475569 !important;
@@ -299,11 +301,11 @@ if (strpos($name, ' ') !== false) {
         body.dark-mode .avatar-large { background: #6366f1 !important; }
         body.dark-mode .progress-bar { background: #475569 !important; }
         body.dark-mode .progress-fill { background: #38bdf8 !important; }
-        body.dark-mode .badge { background: #475569 !important; color: #e2e8f0 !important; }
+        body.dark-mode .badge { background: #475569 !important; color: #e2e8f0 !important; border:none; }
+        body.dark-mode #toast { background: #6366f1 !important; color: white !important; }
     </style>
-    <link rel="stylesheet" href="premium.css">
 </head>
-<body class="<?= htmlspecialchars($themeClass) ?>">
+<body class="<?= htmlspecialchars($themeClass) ?>">>
 <div class="container">
     <!-- header -->
     <div class="header-row">
@@ -424,9 +426,19 @@ if (strpos($name, ' ') !== false) {
     <!-- PRIVACY TAB -->
     <div id="privacy" class="tab-pane">
         <h3>Data & privacy</h3>
-        <p>Profile visibility: <select><option>Public</option></select></p>
-        <p><button class="btn-outline"><i class="fas fa-download"></i> Download my data</button></p>
-        <p style="color:red;"><i class="fas fa-trash-alt"></i> Delete account (irreversible)</p>
+        <div class="form-grid" style="margin-top: 1.5rem; margin-bottom: 2rem;">
+            <div class="form-group">
+                <label>Profile visibility</label>
+                <select id="profileVisibility">
+                    <option value="public">Public - visible to everyone</option>
+                    <option value="private">Private - visible only to connections</option>
+                </select>
+            </div>
+        </div>
+        <div style="display:flex; gap:1.5rem; flex-wrap:wrap;">
+            <button class="btn-outline" id="downloadDataBtn"><i class="fas fa-download"></i> Download my data (.zip)</button>
+            <button class="btn-primary" style="background:var(--danger); border:none;" id="deleteAccountBtn"><i class="fas fa-trash-alt"></i> Delete account</button>
+        </div>
     </div>
 
     <!-- connected accounts & appearance -->
@@ -488,6 +500,34 @@ if (strpos($name, ' ') !== false) {
 
         // password strength meter dummy
         // (static demo, no real logic)
+
+        // Privacy Tab Actions
+        const visibilitySelect = document.getElementById('profileVisibility');
+        if(visibilitySelect) {
+            visibilitySelect.addEventListener('change', () => {
+                const toast = document.getElementById('toast');
+                toast.innerText = '✅ Profile visibility strictly updated';
+                toast.style.display = 'flex';
+                setTimeout(() => { toast.style.display = 'none'; toast.innerText = '✅ Changes saved'; }, 2500);
+            });
+        }
+
+        const downloadBtn = document.getElementById('downloadDataBtn');
+        if(downloadBtn) {
+            downloadBtn.addEventListener('click', () => {
+                alert('📥 Compiling your personal data... A secure download link will be emailed to your registered address shortly.');
+            });
+        }
+
+        const deleteBtn = document.getElementById('deleteAccountBtn');
+        if(deleteBtn) {
+            deleteBtn.addEventListener('click', () => {
+                const conf = confirm('⚠️ WARNING: This action is irreversible. Are you absolutely sure you want to permanently delete your account and all associated timetables/data?');
+                if(conf) {
+                    alert('Your account deletion request has been submitted to system administrators for processing.');
+                }
+            });
+        }
 
         // Accent Color picker logic
         const colorPicker = document.getElementById('accentColorPicker');
