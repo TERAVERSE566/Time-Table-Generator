@@ -15,6 +15,7 @@ $dashUrl = ($role === 'admin') ? 'admin.php' : (($role === 'faculty') ? 'faculty
     <title>Grade Calculator · TimetableGen</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="premium.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', system-ui, sans-serif; }
         body { background: var(--bg-light); padding: 2rem; min-height: 100vh; }
@@ -59,7 +60,10 @@ $dashUrl = ($role === 'admin') ? 'admin.php' : (($role === 'faculty') ? 'faculty
             <a href="<?= $dashUrl ?>" class="back-btn"><i class="fas fa-arrow-left"></i></a>
             <h1><i class="fas fa-calculator"></i> Grade Calculator</h1>
         </div>
-        <button class="back-btn" onclick="resetCalc()"><i class="fas fa-redo"></i> Reset</button>
+        <div style="display:flex; gap:1rem;">
+            <button class="back-btn" id="celebrateBtn" style="display:none; color:#10b981; border: 2px solid #10b981;" onclick="triggerConfetti()"><i class="fas fa-magic"></i> Celebrate!</button>
+            <button class="back-btn" onclick="resetCalc()"><i class="fas fa-redo"></i> Reset</button>
+        </div>
     </div>
 
     <div class="calc-card">
@@ -146,12 +150,14 @@ function calculate() {
     
     const gradeEl = document.getElementById('finalGrade');
     const letterEl = document.getElementById('gradeLetter');
+    const celebrateBtn = document.getElementById('celebrateBtn');
     
     if (totalWeight === 0) {
         gradeEl.innerText = '--';
         letterEl.innerText = 'Start entering scores...';
         gradeEl.style.color = 'var(--gold)';
         letterEl.style.color = 'white';
+        celebrateBtn.style.display = 'none';
         return;
     }
     
@@ -175,6 +181,21 @@ function calculate() {
     gradeEl.style.color = color;
     letterEl.style.color = color;
     letterEl.innerText = msg;
+    
+    if (currentStanding > 90) {
+        celebrateBtn.style.display = 'block';
+    } else {
+        celebrateBtn.style.display = 'none';
+    }
+}
+
+function triggerConfetti() {
+    confetti({
+        particleCount: 150,
+        spread: 80,
+        origin: { y: 0.6 },
+        colors: ['#f4c542', '#10b981', '#4f46e5', '#db2777', '#38bdf8']
+    });
 }
 
 // Init
