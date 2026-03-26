@@ -358,7 +358,14 @@ if (strpos($name, ' ') !== false) {
             <div class="form-group"><label>Email</label><input value="<?= htmlspecialchars($email) ?>" readonly></div>
             <div class="form-group"><label>Phone</label><input value="<?= htmlspecialchars($phone) ?>"></div>
             <div class="form-group"><label>Date of birth</label><input type="date" value="1985-06-15"></div>
-            <div class="form-group"><label>Gender</label><select><option>Female</option></select></div>
+            <div class="form-group"><label>Gender</label>
+                <select>
+                    <option value="female">Female</option>
+                    <option value="male">Male</option>
+                    <option value="nonbinary">Non-binary</option>
+                    <option value="prefer_not_to_say">Prefer not to say</option>
+                </select>
+            </div>
         </div>
         <div class="action-bar"><button class="btn-primary">Save changes</button></div>
     </div>
@@ -423,11 +430,11 @@ if (strpos($name, ' ') !== false) {
     <!-- NOTIFICATIONS TAB -->
     <div id="notifications" class="tab-pane">
         <h3>Notification history</h3>
-        <ul>
+        <ul id="notifList" style="margin: 1rem 0; padding-left: 1.5rem; line-height:2;">
             <li>Schedule change: CS301 moved to LH-101 <span class="badge">1h ago</span></li>
             <li>Leave request approved <span class="badge">2d ago</span></li>
         </ul>
-        <button class="btn-outline">Mark all read</button>
+        <button class="btn-outline" id="markReadBtn">Mark all read</button>
     </div>
 
     <!-- PRIVACY TAB -->
@@ -542,10 +549,22 @@ if (strpos($name, ' ') !== false) {
             colorPicker.value = localStorage.getItem('themeColor') || '#0a3b5b';
             colorPicker.addEventListener('input', (e) => {
                 const val = e.target.value;
-                document.documentElement.style.setProperty('--navy', val);
-                document.documentElement.style.setProperty('--primary', val);
-                document.documentElement.style.setProperty('--primary-color', val);
+                // Force onto body with !important to crush role-based CSS lock
+                document.body.style.setProperty('--navy', val, 'important');
+                document.body.style.setProperty('--primary', val, 'important');
+                document.body.style.setProperty('--navy-light', val, 'important');
+                document.body.style.setProperty('--primary-light', val, 'important');
                 localStorage.setItem('themeColor', val);
+            });
+        }
+
+        // Notification logic
+        const markReadBtn = document.getElementById('markReadBtn');
+        const notifList = document.getElementById('notifList');
+        if (markReadBtn && notifList) {
+            markReadBtn.addEventListener('click', () => {
+                notifList.innerHTML = '<li style="color:var(--gray-600); list-style:none; margin-left:-1.5rem;"><i class="fas fa-check-circle" style="color:var(--success);"></i> All caught up! No new notifications.</li>';
+                markReadBtn.style.display = 'none';
             });
         }
 

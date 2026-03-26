@@ -2,9 +2,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Apply saved theme color
     const savedColor = localStorage.getItem('themeColor');
     if (savedColor) {
-        document.documentElement.style.setProperty('--navy', savedColor);
-        document.documentElement.style.setProperty('--primary', savedColor);
-        document.documentElement.style.setProperty('--primary-color', savedColor);
+        document.body.style.setProperty('--navy', savedColor, 'important');
+        document.body.style.setProperty('--primary', savedColor, 'important');
+        document.body.style.setProperty('--navy-light', savedColor, 'important');
+        document.body.style.setProperty('--primary-light', savedColor, 'important');
     }
     
     // Apply dark mode
