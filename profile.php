@@ -497,6 +497,7 @@ if (strpos($name, ' ') !== false) {
                 const val = e.target.value;
                 document.documentElement.style.setProperty('--navy', val);
                 document.documentElement.style.setProperty('--primary', val);
+                document.documentElement.style.setProperty('--primary-color', val);
                 localStorage.setItem('themeColor', val);
             });
         }

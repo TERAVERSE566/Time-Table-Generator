@@ -4,6 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (savedColor) {
         document.documentElement.style.setProperty('--navy', savedColor);
         document.documentElement.style.setProperty('--primary', savedColor);
+        document.documentElement.style.setProperty('--primary-color', savedColor);
     }
     
     // Apply dark mode
