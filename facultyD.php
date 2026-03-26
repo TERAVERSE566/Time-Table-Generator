@@ -597,7 +597,7 @@ $initials = strtoupper(substr($user_name, 0, 1) . (strpos($user_name, ' ') ? sub
     <!-- zoom/meet integration -->
     <div style="background: white; border-radius:2rem; padding:1.5rem; margin-top:1rem;">
         <h3><i class="fas fa-video"></i> Upcoming Online Sessions</h3>
-        <p>CS501 · Meet link: <a href="#">https://meet.google.com/abc</a> (10:00 AM) <button class="btn-sm">Join</button></p>
+        <p>CS501 · Meet link: <a href="feature_preview.php?feature=Google+Meet+Integration">https://meet.google.com/abc</a> (10:00 AM) <button class="btn-sm" onclick="window.location.href='feature_preview.php?feature=Google+Meet+Integration'">Join</button></p>
     </div>
 </div>
 

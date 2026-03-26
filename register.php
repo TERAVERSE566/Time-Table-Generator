@@ -496,7 +496,7 @@ try {
       <!-- STEP 3 – VERIFICATION -->
       <div id="step3" class="step step-3">
         <div style="margin:1rem 0 2rem;">
-          <label><input type="checkbox" name="terms_accepted" id="termsCheck">  I accept the <a href="#">Terms & conditions</a> 📜</label><br>
+          <label><input type="checkbox" name="terms_accepted" id="termsCheck">  I accept the <a href="feature_preview.php?feature=Terms+and+Conditions" target="_blank">Terms & conditions</a> 📜</label><br>
           <label style="display:block; margin:1rem 0;"><input type="checkbox" name="privacy_accepted" id="privacyCheck">  Privacy policy agreement 🔏</label>
           <div class="email-verify-notice" style="background:#E8F0FE; padding:1rem; border-radius:30px; margin:1rem 0;">
             ✉️ A verification email will be sent to your inbox.

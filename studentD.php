@@ -405,7 +405,7 @@ if ($row = $res->fetch_assoc()) {
             <!-- exam schedule -->
             <div class="exam-card">
                 <h3>📋 Exam Schedule</h3>
-                <p><i class="fas fa-pencil-alt"></i> Midterm CS301: 2 Apr, 10am, LH-101 (seat 45) <a href="#">syllabus</a></p>
+                <p><i class="fas fa-pencil-alt"></i> Midterm CS301: 2 Apr, 10am, LH-101 (seat 45) <a href="feature_preview.php?feature=Syllabus">syllabus</a></p>
                 <p><i class="fas fa-pencil-alt"></i> MA201: 5 Apr, 2pm, LH-105</p>
             </div>
 
@@ -439,8 +439,8 @@ if ($row = $res->fetch_assoc()) {
             <div class="quick-actions">
                 <button class="action-btn" id="qrBtn"><i class="fas fa-qrcode"></i> Mark Attendance</button>
                 <button class="action-btn" onclick="window.location.href='table_view.php'"><i class="fas fa-calendar-week"></i> Full Schedule</button>
-                <button class="action-btn"><i class="fas fa-calculator"></i> Grade Calc</button>
-                <button class="action-btn"><i class="fas fa-users"></i> Study Group</button>
+                <button class="action-btn" onclick="window.location.href='feature_preview.php?feature=Grade+Calculator'"><i class="fas fa-calculator"></i> Grade Calc</button>
+                <button class="action-btn" onclick="window.location.href='feature_preview.php?feature=Study+Group'"><i class="fas fa-users"></i> Study Group</button>
             </div>
         </div>
     </div>
@@ -448,7 +448,7 @@ if ($row = $res->fetch_assoc()) {
     <!-- footer mini: friend comparison & map -->
     <div style="display: flex; gap:2rem; margin-top:2rem; flex-wrap:wrap; background:white; border-radius:2rem; padding:1.5rem;">
         <div><i class="fas fa-user-friends"></i> Friend's next class: <strong>Sam</strong> also in CS301 at 10am</div>
-        <div><i class="fas fa-map-marked-alt"></i> Campus map: <a href="#">LH-101 is near library</a></div>
+        <div><i class="fas fa-map-marked-alt"></i> Campus map: <a href="feature_preview.php?feature=Campus+Map">LH-101 is near library</a></div>
         <div><i class="fas fa-bell"></i> Notifications <span class="badge-achievement">3</span></div>
     </div>
 </div>

@@ -284,7 +284,7 @@ if (!isset($_SESSION['user_id'])) {
 
     <!-- documentation links -->
     <div style="margin:2rem 0; text-align:center;">
-        <a href="#">📘 User manual</a> | <a href="#">📚 API docs</a> | <a href="#">📋 Release notes</a>
+        <a href="feature_preview.php?feature=User+Manual">📘 User manual</a> | <a href="feature_preview.php?feature=API+Docs">📚 API docs</a> | <a href="feature_preview.php?feature=Release+Notes">📋 Release notes</a>
     </div>
 </div>
 

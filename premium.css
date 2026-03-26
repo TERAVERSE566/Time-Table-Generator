@@ -128,3 +128,80 @@ body.theme-student {
     --navy: var(--primary) !important;
     --navy-light: var(--primary-light) !important;
 }
+
+/* ==========================================================================
+   GLOBAL RESPONSIVENESS (Mobile & Tablet)
+   ========================================================================== */
+@media (max-width: 1024px) {
+    .main-grid, .dashboard-grid, .stats-grid, .featured-grid, .categories-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+    }
+    .header-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1.5rem !important;
+        text-align: left !important;
+    }
+    .filters, .actions, .view-controls {
+        width: 100% !important;
+        justify-content: flex-start !important;
+        overflow-x: auto !important;
+        padding-bottom: 0.5rem !important;
+    }
+    .sidebar {
+        position: relative !important;
+        width: 100% !important;
+        height: auto !important;
+        padding-bottom: 1rem !important;
+        margin-bottom: 2rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        padding: 1rem !important;
+    }
+    .container {
+        padding: 0 !important;
+    }
+    .header-title h1, .header h1, .hero h1 {
+        font-size: 2rem !important;
+    }
+    .card, .panel, .stat-card, .glass-panel, .form-container, .auth-card {
+        padding: 1.2rem !important;
+        border-radius: 1.5rem !important;
+    }
+    /* Make tables and wide grids scrollable horizontally */
+    .data-table, .week-grid, .table-responsive {
+        width: 100% !important;
+        overflow-x: auto !important;
+        display: block !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    /* Stack tabs */
+    .tabs, .tab-buttons {
+        flex-direction: column !important;
+        width: 100% !important;
+        border-radius: 1rem !important;
+    }
+    .tab {
+        width: 100% !important;
+        text-align: center !important;
+        border-radius: 0.5rem !important;
+    }
+    /* Stack forms and horizontal layout rows */
+    .form-row, .role-row, .control-bar {
+        flex-direction: column !important;
+        gap: 1rem !important;
+        align-items: stretch !important;
+    }
+    .form-group input, .form-group select, .filter-course, .date-picker {
+        width: 100% !important;
+    }
+    .login-container, .register-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 1rem !important;
+    }
+}

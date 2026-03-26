@@ -359,7 +359,7 @@ if (!isset($_SESSION['user_id'])) {
             <!-- Schedule conflicts -->
             <div class="panel">
                 <h3>⚠️ Conflicts</h3>
-                <p>Double-booking: CS301 & meeting Wed 9am – <a href="#">swap</a></p>
+                <p>Double-booking: CS301 & meeting Wed 9am – <a href="feature_preview.php?feature=Shift+Swap+Request">swap</a></p>
             </div>
         </div>
     </div>

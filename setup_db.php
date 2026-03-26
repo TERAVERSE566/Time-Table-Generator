@@ -62,7 +62,7 @@ try {
         ['EC', 'Electronics & Comm.']
     ];
     $stmt = $conn->prepare("INSERT IGNORE INTO departments (code, name) VALUES (?, ?)");
-    foreach($depts as $d) {
+    foreach ($depts as $d) {
         $stmt->bind_param("ss", $d[0], $d[1]);
         $stmt->execute();
     }
@@ -143,7 +143,7 @@ try {
     // Optionally create default admin
     $admin_email = "admin@timetablegen.com";
     $result = $conn->query("SELECT id FROM users WHERE email='$admin_email'");
-    if($result->num_rows == 0) {
+    if ($result->num_rows == 0) {
         $hash = password_hash("admin123", PASSWORD_DEFAULT);
         $conn->query("INSERT INTO users (name, email, password_hash, role) VALUES ('System Admin', '$admin_email', '$hash', 'admin')");
         echo "Default admin user created (admin@timetablegen.com / admin123).\n";
@@ -151,8 +151,8 @@ try {
 
     echo "Setup finished successfully!\n";
 
-} catch(Exception $e) {
+}
+catch (Exception $e) {
     die("Setup failed: " . $e->getMessage());
 }
 ?>
-

@@ -453,7 +453,7 @@ $entriesJson = json_encode($entries);
             <p><i class="fas fa-chalkboard-teacher"></i> Dr. Aarti Sharma · aarti@college.edu</p>
             <p><i class="fas fa-door-open"></i> LH-101 · Mon 8-10, Wed 8-9</p>
             <p>📚 Prerequisites: CS101</p>
-            <p>📎 Materials: <a href="#">slides</a>, <a href="#">github</a></p>
+            <p>📎 Materials: <a href="feature_preview.php?feature=Slides">slides</a>, <a href="feature_preview.php?feature=GitHub">github</a></p>
             <p>📅 Next assignment due: 20 Sep</p>
             <button class="icon-btn" id="closeModal">Close</button>
         </div>

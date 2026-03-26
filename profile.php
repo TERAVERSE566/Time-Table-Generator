@@ -367,7 +367,7 @@ if (strpos($name, ' ') !== false) {
         </div>
         <div class="form-group"><label>Confirm password</label><input type="password"></div>
         <p>Two-factor authentication: <button class="btn-outline">Enable</button></p>
-        <p>Active sessions: 2 · <a href="#">Log out all</a></p>
+        <p>Active sessions: 2 · <a href="feature_preview.php?feature=Log+Out+All+Sessions">Log out all</a></p>
         <div class="action-bar"><button class="btn-primary">Update security</button></div>
     </div>
 
