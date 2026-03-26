@@ -123,52 +123,28 @@ function resetCalc() {
     calculate();
 }
 
-function getLetter(pct) {
-    if (pct >= 90) return 'A+ (Excellent)';
-    if (pct >= 80) return 'A (Very Good)';
-    if (pct >= 70) return 'B (Good)';
-    if (pct >= 60) return 'C (Average)';
-    if (pct >= 50) return 'D (Pass)';
-    return 'F (Fail)';
-}
-
-function calculate() {
-    let totalWeight = 0;
-    let earnedWeight = 0;
-    
-    const rows = document.querySelectorAll('#rowsContainer .row');
-    rows.forEach(row => {
-        const score = parseFloat(row.querySelector('.score').value);
-        const max = parseFloat(row.querySelector('.max').value);
-        const weight = parseFloat(row.querySelector('.weight').value);
-        
-        if (!isNaN(weight)) totalWeight += weight;
-        
-        if (!isNaN(score) && !isNaN(max) && !isNaN(weight) && max > 0) {
-            earnedWeight += (score / max) * weight;
-        }
-    });
-    
-    // Check warnings
-    const warning = document.getElementById('weightWarning');
-    if (totalWeight > 100) warning.style.display = 'block';
-    else warning.style.display = 'none';
-    
-    const gradeEl = document.getElementById('finalGrade');
-    const letterEl = document.getElementById('gradeLetter');
-    
-    if (totalWeight === 0) {
-        gradeEl.innerText = '--';
-        letterEl.innerText = 'Start entering scores...';
-        return;
-    }
-    
     // Scale it to 100% just to show current standing based on entered weights
-    // e.g., if total weight entered is 50%, and earned is 40%, they have 80% current standing
     const currentStanding = (earnedWeight / totalWeight) * 100;
     
     gradeEl.innerText = currentStanding.toFixed(2) + '%';
-    letterEl.innerText = getLetter(currentStanding);
+    
+    let color = 'white';
+    let msg = '';
+    
+    if (currentStanding > 75) {
+        color = '#4ade80'; // Bright green for dark backgrounds
+        msg = 'Great / Good 🌟';
+    } else if (currentStanding >= 35) {
+        color = '#fbbf24'; // Bright yellow
+        msg = 'Pass 👍';
+    } else {
+        color = '#f87171'; // Bright red
+        msg = 'Fail ⚠️';
+    }
+    
+    gradeEl.style.color = color;
+    letterEl.style.color = color;
+    letterEl.innerText = msg;
 }
 
 // Init
