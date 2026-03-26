@@ -854,6 +854,7 @@ $initials = strtoupper(substr($user_name, 0, 1) . (strpos($user_name, ' ') ? sub
     });
 })();
 </script>
+<script src="theme.js"></script>
 </body>
 </html>
 

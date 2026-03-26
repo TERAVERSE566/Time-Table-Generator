@@ -593,6 +593,7 @@ $themeClass = 'theme-admin';
 </script>
 <!-- dummy chart sizing fix -->
 <style>.chart-card canvas { width: 100% !important; height: auto !important; }</style>
+<script src="theme.js"></script>
 </body>
 </html>
 

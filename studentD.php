@@ -458,26 +458,6 @@ if ($row = $res->fetch_assoc()) {
 
 <script>
     (function() {
-        // QR code scanner simulation
-        document.getElementById('qrBtn').addEventListener('click', function() {
-            const toast = document.getElementById('toast');
-            toast.style.display = 'flex';
-            setTimeout(() => toast.style.display = 'none', 2000);
-        });
-
-        // grade calculator popup simulation
-        document.querySelectorAll('.action-btn')[2].addEventListener('click', function() {
-            alert('📊 Grade calculator: enter marks to predict GPA');
-        });
-
-        // friend schedule / map links simulation
-        document.querySelectorAll('a[href="#"]').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                alert('🔍 Syllabus preview (simulated)');
-            });
-        });
-
         // dynamic date and greeting (optional)
         const dateEl = document.querySelector('.weather-date');
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -485,6 +465,7 @@ if ($row = $res->fetch_assoc()) {
         // update if needed
     })();
 </script>
+<script src="theme.js"></script>
 </body>
 </html>
 

@@ -260,6 +260,46 @@ if (strpos($name, ' ') !== false) {
             display: none;
             z-index: 2000;
         }
+
+        .bottom-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .profile-card { flex-direction: column; text-align: center; }
+            .bottom-grid { grid-template-columns: 1fr; }
+            .form-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ===== PROPER DARK MODE ===== */
+        body.dark-mode {
+            background: #0f172a !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode .profile-card, body.dark-mode .tab-pane, body.dark-mode .settings-tabs {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #e2e8f0 !important;
+            box-shadow: none !important;
+        }
+        body.dark-mode .header-title h1, body.dark-mode .profile-info h2, body.dark-mode h3, body.dark-mode h4 { color: #f1f5f9 !important; }
+        body.dark-mode .header-title p, body.dark-mode .form-group label, body.dark-mode p { color: #94a3b8 !important; }
+        body.dark-mode input, body.dark-mode select {
+            background: #334155 !important;
+            border-color: #475569 !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode .tab-btn { color: #94a3b8 !important; }
+        body.dark-mode .tab-btn.active { background: #6366f1 !important; color: white !important; }
+        body.dark-mode .btn-primary { background: #6366f1 !important; color: white !important; }
+        body.dark-mode .btn-outline { background: transparent !important; color: #38bdf8 !important; border-color: #38bdf8 !important; }
+        body.dark-mode .avatar-large { background: #6366f1 !important; }
+        body.dark-mode .progress-bar { background: #475569 !important; }
+        body.dark-mode .progress-fill { background: #38bdf8 !important; }
+        body.dark-mode .badge { background: #475569 !important; color: #e2e8f0 !important; }
     </style>
     <link rel="stylesheet" href="premium.css">
 </head>
@@ -353,7 +393,7 @@ if (strpos($name, ' ') !== false) {
             <div class="form-group"><label>Week start</label><select><option>Monday</option></select></div>
         </div>
         <div class="toggle-switch"><i class="fas fa-envelope"></i> Email notifications <input type="checkbox" checked></div>
-        <div class="toggle-switch"><i class="fas fa-moon"></i> Dark mode <input type="checkbox"></div>
+        <div class="toggle-switch"><i class="fas fa-moon"></i> Dark mode <input type="checkbox" id="darkModeToggle"></div>
         <div class="action-bar"><button class="btn-primary">Save preferences</button></div>
     </div>
 
@@ -390,15 +430,18 @@ if (strpos($name, ' ') !== false) {
     </div>
 
     <!-- connected accounts & appearance -->
-    <div style="display:grid; grid-template-columns:1fr 1fr; gap:2rem; margin-top:2rem;">
-        <div class="tab-pane" style="display:block; background:white;">
+    <div class="bottom-grid">
+        <div class="tab-pane" style="display:block;">
             <h4>🔗 Connected accounts</h4>
-            <p>Google Calendar <span class="badge">connected</span> <button class="btn-outline">Sync now</button></p>
+            <p style="margin:1rem 0;">Google Calendar <span class="badge">connected</span> <button class="btn-outline" style="padding:0.3rem 1rem; font-size:0.8rem; margin-left:0.5rem;">Sync now</button></p>
             <p>Microsoft 365 <span class="badge">connected</span></p>
         </div>
-        <div class="tab-pane" style="display:block; background:white;">
+        <div class="tab-pane" style="display:block;">
             <h4>🎨 Appearance</h4>
-            <label>Accent color: <input type="color" value="#0a3b5b"></label>
+            <div style="margin-top:1.5rem;">
+                <label style="display:flex; align-items:center; gap:1rem; font-weight:600;">Accent color: <input type="color" id="accentColorPicker" value="#0a3b5b" style="width:60px; height:40px; padding:0; border:none; border-radius:10px; cursor:pointer; background:transparent;"></label>
+            </div>
+            <p style="margin-top:1rem; font-size:0.9rem; color:var(--gray-600);">Changes update immediately across the entire dashboard.</p>
         </div>
     </div>
 
@@ -445,8 +488,34 @@ if (strpos($name, ' ') !== false) {
 
         // password strength meter dummy
         // (static demo, no real logic)
+
+        // Accent Color picker logic
+        const colorPicker = document.getElementById('accentColorPicker');
+        if (colorPicker) {
+            colorPicker.value = localStorage.getItem('themeColor') || '#0a3b5b';
+            colorPicker.addEventListener('input', (e) => {
+                const val = e.target.value;
+                document.documentElement.style.setProperty('--navy', val);
+                document.documentElement.style.setProperty('--primary', val);
+                localStorage.setItem('themeColor', val);
+            });
+        }
+
+        // Dark mode logic
+        const darkToggle = document.getElementById('darkModeToggle');
+        if (darkToggle) {
+            darkToggle.checked = localStorage.getItem('darkMode') === 'true';
+            darkToggle.addEventListener('change', (e) => {
+                const isDark = e.target.checked;
+                document.body.classList.toggle('dark-mode', isDark);
+                localStorage.setItem('darkMode', isDark);
+                
+                // Keep the top faculty dark mode toggle in sync if it exists (for other pages, purely defensive code here)
+            });
+        }
     })();
 </script>
+<script src="theme.js"></script>
 </body>
 </html>
 
