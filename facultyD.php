@@ -229,16 +229,37 @@ $initials = strtoupper(substr($user_name, 0, 1) . (strpos($user_name, ' ') ? sub
         .course-mini {
             background: var(--gray-100);
             border-radius: 1.5rem;
-            padding: 1rem;
-            margin-bottom: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 1rem;
+            flex-wrap: wrap;
         }
         .action-icons {
             display: flex;
-            gap: 0.8rem;
+            gap: 0.5rem;
+        }
+        .action-icons button {
+            background: white;
+            border: 1px solid var(--gray-300);
             color: var(--navy);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 1.2rem;
+        }
+        .action-icons button:hover {
+            background: var(--navy);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-sm);
         }
 
         /* quick actions */
@@ -427,6 +448,16 @@ $initials = strtoupper(substr($user_name, 0, 1) . (strpos($user_name, ' ') ? sub
             .main-grid { grid-template-columns: 1fr; }
             .modal { width: 98%; }
         }
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+            .course-mini { flex-direction: column; align-items: flex-start; }
+            .action-icons { width: 100%; justify-content: space-around; margin-top: 1rem; }
+            .header-row { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr !important; }
+            .profile-card { flex-wrap: wrap; }
+        }
 
         /* toast */
         .toast {
@@ -519,25 +550,25 @@ $initials = strtoupper(substr($user_name, 0, 1) . (strpos($user_name, ' ') ? sub
                 <div class="course-mini">
                     <div><strong>CS501</strong> Machine Learning (CSE A) · 72 students</div>
                     <div class="action-icons">
-                        <i class="fas fa-check-circle" title="Attendance"></i>
-                        <i class="fas fa-upload" title="Material"></i>
-                        <i class="fas fa-users" title="Students"></i>
+                        <button onclick="document.getElementById('attendanceModal').classList.add('active')" title="Take Attendance"><i class="fas fa-check-circle"></i></button>
+                        <button onclick="window.location.href='feature_preview.php?feature=Upload+Materials'" title="Upload Material"><i class="fas fa-upload"></i></button>
+                        <button onclick="window.location.href='feature_preview.php?feature=Manage+Students'" title="Students List"><i class="fas fa-users"></i></button>
                     </div>
                 </div>
                 <div class="course-mini">
                     <div><strong>CS410</strong> Deep Learning (CSE B) · 68 students</div>
                     <div class="action-icons">
-                        <i class="fas fa-check-circle"></i>
-                        <i class="fas fa-upload"></i>
-                        <i class="fas fa-users"></i>
+                        <button onclick="document.getElementById('attendanceModal').classList.add('active')" title="Take Attendance"><i class="fas fa-check-circle"></i></button>
+                        <button onclick="window.location.href='feature_preview.php?feature=Upload+Materials'" title="Upload Material"><i class="fas fa-upload"></i></button>
+                        <button onclick="window.location.href='feature_preview.php?feature=Manage+Students'" title="Students List"><i class="fas fa-users"></i></button>
                     </div>
                 </div>
                 <div class="course-mini">
                     <div><strong>CS307</strong> Database Systems (CSE A) · 70 students</div>
                     <div class="action-icons">
-                        <i class="fas fa-check-circle"></i>
-                        <i class="fas fa-upload"></i>
-                        <i class="fas fa-users"></i>
+                        <button onclick="document.getElementById('attendanceModal').classList.add('active')" title="Take Attendance"><i class="fas fa-check-circle"></i></button>
+                        <button onclick="window.location.href='feature_preview.php?feature=Upload+Materials'" title="Upload Material"><i class="fas fa-upload"></i></button>
+                        <button onclick="window.location.href='feature_preview.php?feature=Manage+Students'" title="Students List"><i class="fas fa-users"></i></button>
                     </div>
                 </div>
             </div>
