@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $role = $conn->real_escape_string($_POST['role']);
 
-    $stmt = $conn->prepare("SELECT id, name, password_hash, role FROM users WHERE email=? AND role=?");
+    $stmt = $conn->prepare("SELECT id, name, password_hash, role, profile_photo FROM users WHERE email=? AND role=?");
     $stmt->bind_param("ss", $email, $role);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_name'] = $user['name'];
             $_SESSION['user_role'] = $user['role'];
+            $_SESSION['profile_photo'] = $user['profile_photo'];
             
             // Redirect based on role
             if ($role === 'admin') {

@@ -482,7 +482,11 @@ $initials = strtoupper(substr($user_name, 0, 1) . (strpos($user_name, ' ') ? sub
         </div>
         <div style="display: flex; align-items: center; gap: 1rem;">
             <div class="profile-card" onclick="window.location.href='profile.php'" style="cursor:pointer;">
+                <?php if (!empty($_SESSION['profile_photo'])): ?>
+                <img src="<?= htmlspecialchars($_SESSION['profile_photo']) ?>" class="avatar" style="object-fit:cover;">
+                <?php else: ?>
                 <div class="avatar"><?= $initials ?></div>
+                <?php endif; ?>
                 <div class="profile-info">
                     <div class="name"><?= htmlspecialchars($user_name) ?></div>
                     <div class="detail">Faculty Member</div>

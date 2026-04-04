@@ -10,7 +10,7 @@ if (!isset($_SESSION['user_id'])) {
 $user_id = $_SESSION['user_id'];
 $themeClass = isset($_SESSION['user_role']) ? 'theme-' . $_SESSION['user_role'] : '';
 
-$stmt = $conn->prepare("SELECT name, email, role, phone, department, program_level, created_at FROM users WHERE id=?");
+$stmt = $conn->prepare("SELECT name, email, role, phone, department, program_level, created_at, profile_photo FROM users WHERE id=?");
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $res = $stmt->get_result();
@@ -22,6 +22,8 @@ $role = $user['role'] ?? 'student';
 $phone = $user['phone'] ?? '+1 555 0000';
 $dept = $user['department'] ?? 'General';
 $join_date = date("M Y", strtotime($user['created_at']));
+$profile_photo = $user['profile_photo'] ?? '';
+
 $initials = strtoupper(substr($name, 0, 1));
 if (strpos($name, ' ') !== false) {
     $parts = explode(' ', $name);
@@ -123,6 +125,8 @@ if (strpos($name, ' ') !== false) {
             color: white;
             font-size: 3rem;
             position: relative;
+            background-size: cover;
+            background-position: center;
         }
         .upload-overlay {
             position: absolute;
@@ -274,35 +278,6 @@ if (strpos($name, ' ') !== false) {
             .bottom-grid { grid-template-columns: 1fr; }
             .form-grid { grid-template-columns: 1fr; }
         }
-        /* ===== PROPER DARK MODE ===== */
-        body.dark-mode {
-            background: #0f172a !important;
-            color: #e2e8f0 !important;
-        }
-        body.dark-mode .profile-card, body.dark-mode .tab-pane, body.dark-mode .settings-tabs {
-            background: #1e293b !important;
-            border: 1px solid #334155 !important;
-            color: #e2e8f0 !important;
-            box-shadow: none !important;
-        }
-        /* Fix the heading colors explicitly so premium.css doesn't override */
-        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4, body.dark-mode h5 { color: #f8fafc !important; }
-        body.dark-mode .header-title p, body.dark-mode .form-group label, body.dark-mode p, body.dark-mode li, body.dark-mode .verified, body.dark-mode span { color: #cbd5e1 !important; }
-        
-        body.dark-mode input, body.dark-mode select {
-            background: #334155 !important;
-            border-color: #475569 !important;
-            color: #e2e8f0 !important;
-        }
-        body.dark-mode .tab-btn { color: #94a3b8 !important; }
-        body.dark-mode .tab-btn.active { background: #6366f1 !important; color: white !important; }
-        body.dark-mode .btn-primary { background: #6366f1 !important; color: white !important; }
-        body.dark-mode .btn-outline { background: transparent !important; color: #38bdf8 !important; border-color: #38bdf8 !important; }
-        body.dark-mode .avatar-large { background: #6366f1 !important; }
-        body.dark-mode .progress-bar { background: #475569 !important; }
-        body.dark-mode .progress-fill { background: #38bdf8 !important; }
-        body.dark-mode .badge { background: #475569 !important; color: #e2e8f0 !important; border:none; }
-        body.dark-mode #toast { background: #6366f1 !important; color: white !important; }
     </style>
 </head>
 <body class="<?= htmlspecialchars($themeClass) ?>">
@@ -328,9 +303,10 @@ if (strpos($name, ' ') !== false) {
 
     <!-- profile overview card -->
     <div class="profile-card">
-        <div class="avatar-large">
-            <?= htmlspecialchars($initials) ?>
-            <div class="upload-overlay"><i class="fas fa-camera"></i></div>
+        <div class="avatar-large" id="avatarImage" style="background-image: <?= $profile_photo ? "url('$profile_photo')" : 'none' ?>;">
+            <?= $profile_photo ? '' : htmlspecialchars($initials) ?>
+            <div class="upload-overlay" id="uploadOverlay"><i class="fas fa-camera"></i></div>
+            <input type="file" id="photoInput" accept="image/jpeg, image/png, image/webp" style="display:none;">
         </div>
         <div class="profile-info">
             <h2><?= htmlspecialchars($name) ?> <span class="verified"><i class="fas fa-check-circle"></i> Verified</span></h2>
@@ -507,9 +483,43 @@ if (strpos($name, ' ') !== false) {
             });
         });
 
-        // upload overlay alert
-        document.querySelector('.upload-overlay').addEventListener('click', () => {
-            alert('Image upload simulation (crop dialog)');
+        // upload photo logic
+        const photoInput = document.getElementById('photoInput');
+        const overlay = document.getElementById('uploadOverlay');
+        const avatarBox = document.getElementById('avatarImage');
+        const toast = document.getElementById('toast');
+
+        overlay.addEventListener('click', () => {
+            photoInput.click();
+        });
+
+        photoInput.addEventListener('change', (e) => {
+            if(e.target.files.length > 0) {
+                const fd = new FormData();
+                fd.append('profile_photo', e.target.files[0]);
+                
+                fetch('upload_photo.php', {
+                    method: 'POST',
+                    body: fd
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        toast.innerHTML = '✅ Photo updated successfully';
+                        toast.style.display = 'flex';
+                        avatarBox.style.backgroundImage = `url('${data.path}')`;
+                        avatarBox.innerText = ''; // clear initials
+                        avatarBox.appendChild(overlay);
+                        avatarBox.appendChild(photoInput);
+                        setTimeout(() => toast.style.display = 'none', 2000);
+                    } else {
+                        alert('Upload failed: ' + data.message);
+                    }
+                })
+                .catch(err => {
+                    alert('Error reaching server API.');
+                });
+            }
         });
 
         // password strength meter dummy

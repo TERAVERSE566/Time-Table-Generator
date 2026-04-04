@@ -315,7 +315,11 @@ if ($row = $res->fetch_assoc()) {
         </div>
         <div style="display: flex; align-items: center; gap: 1rem;">
             <div class="id-card" onclick="window.location.href='profile.php'" style="cursor:pointer;">
+                <?php if (!empty($_SESSION['profile_photo'])): ?>
+                <img src="<?= htmlspecialchars($_SESSION['profile_photo']) ?>" class="avatar" style="object-fit:cover;">
+                <?php else: ?>
                 <div class="avatar"><?= $initials ?></div>
+                <?php endif; ?>
                 <div class="student-info">
                     <div class="name"><?= htmlspecialchars($user_name) ?></div>
                     <div class="detail">Student · <?= htmlspecialchars($user_dept) ?></div>

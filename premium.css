@@ -236,3 +236,58 @@ body.theme-student {
         transform: none !important;
     }
 }
+
+/* ==========================================================================
+   GLOBAL PROPER DARK MODE (All pages & Roles)
+   ========================================================================== */
+body.dark-mode {
+    background: #0f172a !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-mode .card, body.dark-mode .panel, body.dark-mode .stat-card, 
+body.dark-mode .glass-panel, body.dark-mode .dept-card, body.dark-mode .faculty-card,
+body.dark-mode .modal-content, body.dark-mode .detail-panel, body.dark-mode .table-section,
+body.dark-mode .filter-bar, body.dark-mode .search-box, body.dark-mode th, body.dark-mode td {
+    background: #1e293b !important;
+    border: 1px solid #334155 !important;
+    color: #e2e8f0 !important;
+    box-shadow: none !important;
+}
+
+body.dark-mode h1, body.dark-mode h2, body.dark-mode h3, body.dark-mode h4, body.dark-mode h5 {
+    color: #f8fafc !important;
+}
+
+body.dark-mode p, body.dark-mode li, body.dark-mode .verified, body.dark-mode span, 
+body.dark-mode label, body.dark-mode .metric-item, body.dark-mode .stat-info h3, body.dark-mode .dept-code {
+    color: #cbd5e1 !important;
+}
+
+body.dark-mode input, body.dark-mode select, body.dark-mode textarea {
+    background: #334155 !important;
+    border-color: #475569 !important;
+    color: #e2e8f0 !important;
+}
+
+body.dark-mode .btn-outline {
+    background: transparent !important;
+    color: #38bdf8 !important;
+    border-color: #38bdf8 !important;
+}
+
+body.dark-mode .btn-primary {
+    background: #6366f1 !important;
+    color: white !important;
+}
+
+body.dark-mode .progress-bar, body.dark-mode .capacity-bar { background: #475569 !important; }
+body.dark-mode .progress-fill, body.dark-mode .capacity-fill { background: #38bdf8 !important; }
+
+body.dark-mode .badge, body.dark-mode .status-badge {
+    background: #475569 !important; 
+    color: #e2e8f0 !important; 
+    border: none;
+}
+body.dark-mode .status-badge.active { background: #14532d !important; color: #bbf7d0 !important; }
+body.dark-mode .status-badge.inactive { background: #7f1d1d !important; color: #fecaca !important; }

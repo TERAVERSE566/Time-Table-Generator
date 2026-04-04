@@ -434,7 +434,11 @@ $themeClass = 'theme-admin';
                     <span class="badge">5</span>
                 </div>
                 <div class="admin-profile">
+                    <?php if (!empty($_SESSION['profile_photo'])): ?>
+                    <img src="<?= htmlspecialchars($_SESSION['profile_photo']) ?>" alt="Admin" style="object-fit:cover;">
+                    <?php else: ?>
                     <img src="https://randomuser.me/api/portraits/men/41.jpg" alt="Admin">
+                    <?php endif; ?>
                     <span><?= htmlspecialchars($_SESSION['user_name'] ?? 'Admin') ?></span>
                     <i class="fas fa-chevron-down"></i>
                 </div>

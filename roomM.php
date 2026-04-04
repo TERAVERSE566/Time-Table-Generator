@@ -378,9 +378,9 @@ if ($res) {
     <div class="header-section">
         <div class="header-title">
             <h1>🚪 Room Management</h1>
-            <p>Manage lecture halls, labs, and seminar rooms</p>
+            <p>Manage campus facilities and their availability</p>
         </div>
-        <div class="action-group" style="display: flex; gap: 0.8rem;">
+        <div class="action-group" style="display:flex; gap:1rem;">
             <button class="btn-outline" onclick="window.location.href='admin.php'"><i class="fas fa-arrow-left"></i> Dashboard</button>
             <button class="btn-primary" id="addRoomBtn"><i class="fas fa-plus"></i> Add New Room</button>
         </div>

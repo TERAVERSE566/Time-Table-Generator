@@ -491,7 +491,10 @@ foreach($deptsArray as $d) {
             <h1>🏛️ Department Management</h1>
             <p>Manage academic departments and their details</p>
         </div>
-        <button class="btn-primary" id="addDeptBtn"><i class="fas fa-plus-circle"></i> Add New Department</button>
+        <div class="action-group" style="display:flex; gap:1rem;">
+            <button class="btn-secondary" onclick="window.location.href='admin.php'"><i class="fas fa-arrow-left"></i> Dashboard</button>
+            <button class="btn-primary" id="addDeptBtn"><i class="fas fa-plus-circle"></i> Add New Department</button>
+        </div>
     </div>
 
     <div class="stats-grid">

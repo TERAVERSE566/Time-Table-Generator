@@ -447,11 +447,11 @@ if ($dRes) {
     <div class="header-section">
         <div class="header-title">
             <h1>👩‍🎓 Student Management</h1>
-            <p>Manage student records, enrollments, and schedules</p>
+            <p>Manage student records, batches, and academic progress</p>
         </div>
         <div class="action-group">
             <button class="btn-outline" onclick="window.location.href='admin.php'"><i class="fas fa-arrow-left"></i> Dashboard</button>
-            <button class="btn-primary" id="addStudentBtn"><i class="fas fa-plus"></i> Add Student</button>
+            <button class="btn-primary" id="addStudentBtn"><i class="fas fa-user-plus"></i> Add Student</button>
             <button class="btn-outline" id="batchImport"><i class="fas fa-upload"></i> Batch Import</button>
             <button class="btn-outline" id="graduateBtn"><i class="fas fa-graduation-cap"></i> Graduate Students</button>
         </div>
