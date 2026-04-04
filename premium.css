@@ -14,6 +14,12 @@
     --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
 }
 
+html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+}
+
 body:not(.theme-admin) {
     background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%) !important;
     background-attachment: fixed !important;
@@ -164,16 +170,21 @@ body.theme-student {
     }
     .container {
         padding: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
     .header-title h1, .header h1, .hero h1 {
         font-size: 2rem !important;
+        word-wrap: break-word !important;
     }
     .card, .panel, .stat-card, .glass-panel, .form-container, .auth-card {
         padding: 1.2rem !important;
         border-radius: 1.5rem !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
     /* Make tables and wide grids scrollable horizontally */
-    .data-table, .week-grid, .table-responsive {
+    .data-table, .week-grid, .table-responsive, table, .timetable-grid, .curriculum-row {
         width: 100% !important;
         overflow-x: auto !important;
         display: block !important;
@@ -189,19 +200,39 @@ body.theme-student {
         width: 100% !important;
         text-align: center !important;
         border-radius: 0.5rem !important;
+        margin-bottom: 0.5rem !important;
     }
     /* Stack forms and horizontal layout rows */
-    .form-row, .role-row, .control-bar {
+    .form-row, .role-row, .control-bar, .form-grid {
         flex-direction: column !important;
+        display: flex !important;
         gap: 1rem !important;
         align-items: stretch !important;
+        width: 100% !important;
     }
     .form-group input, .form-group select, .filter-course, .date-picker {
         width: 100% !important;
+        box-sizing: border-box !important;
     }
     .login-container, .register-container {
         width: 100% !important;
         max-width: 100% !important;
         padding: 1rem !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* Disable hover transforms on touch/mobile to prevent overflow jumping */
+    body:not(.theme-admin) .card:hover,
+    body:not(.theme-admin) .stat-card:hover,
+    body:not(.theme-admin) .course-mini:hover,
+    body:not(.theme-admin) .timeline-card:hover,
+    body:not(.theme-admin) .btn-solid:hover,
+    body:not(.theme-admin) .btn-primary:hover,
+    body:not(.theme-admin) .action-btn:hover,
+    .theme-admin .action-btn:hover,
+    .btn-primary:hover,
+    .course-card:hover {
+        transform: none !important;
     }
 }
