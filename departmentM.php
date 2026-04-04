@@ -813,6 +813,7 @@ foreach($deptsArray as $d) {
 </script>
 <!-- style for buttons -->
 <style>.btn-secondary { padding:0.8rem 2rem; border-radius:60px; border:none; background:#e2e8f0; cursor:pointer; }</style>
+<script src="theme.js"></script>
 </body>
 </html>
 

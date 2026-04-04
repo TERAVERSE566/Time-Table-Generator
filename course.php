@@ -727,6 +727,7 @@ if($dRes) {
         window.checkDependency = () => alert('Dependency validation: no cycles');
     })();
 </script>
+<script src="theme.js"></script>
 </body>
 </html>
 

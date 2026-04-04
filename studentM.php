@@ -764,6 +764,7 @@ if ($dRes) {
         updateSelectedCount();
     })();
 </script>
+<script src="theme.js"></script>
 </body>
 </html>
 

@@ -413,7 +413,7 @@ $themeClass = 'theme-admin';
             <div class="menu-item" onclick="window.location.href='profile.php'"><span class="emoji">⚙️</span> <span>Settings</span></div>
         </div>
         <div class="logout" onclick="window.location.href='logout.php'">
-            <span class="emoji">🚪</span> <span>Logout</span>
+            <span class="emoji">🚶</span> <span>Logout</span>
         </div>
     </aside>
 
@@ -429,6 +429,15 @@ $themeClass = 'theme-admin';
                 </div>
             </div>
             <div class="header-right">
+                <button id="themeToggle" title="Toggle Dark Mode" style="background:none; border:none; font-size:1.4rem; cursor:pointer; padding:0.5rem; border-radius:50%; transition:0.2s;" onclick="document.body.classList.toggle('dark-mode'); let isDark = document.body.classList.contains('dark-mode'); localStorage.setItem('darkMode', isDark); this.textContent = isDark ? '☀️' : '🌙';">
+                    🌙
+                </button>
+                <script>
+                    // Sync toggle icon on load
+                    if (localStorage.getItem('darkMode') === 'true') {
+                        document.getElementById('themeToggle').textContent = '☀️';
+                    }
+                </script>
                 <div class="notification">
                     <i class="far fa-bell"></i>
                     <span class="badge">5</span>

@@ -537,10 +537,18 @@ if ($res) {
         }
 
         // global functions
+        const roomModal = document.getElementById('roomModal');
+        const addBtn = document.getElementById('addRoomBtn');
+        const closeModal = document.getElementById('closeModal');
+        const saveRoom = document.getElementById('saveRoom');
+        const scheduleModal = document.getElementById('scheduleModal');
+        const closeSchedule = document.getElementById('closeSchedule');
+        const toast = document.getElementById('toast');
+
         window.viewRoom = (id) => { alert('View details for room '+id); };
         window.editRoom = (id) => {
             document.getElementById('modalTitle').innerText = '✏️ Edit Room';
-            document.getElementById('roomModal').classList.add('active');
+            roomModal.classList.add('active');
         };
         closeModal.addEventListener('click', () => roomModal.classList.remove('active'));
         saveRoom.addEventListener('click', () => {
@@ -601,15 +609,6 @@ if ($res) {
             }, 100);
         };
 
-        // modal controls
-        const roomModal = document.getElementById('roomModal');
-        const addBtn = document.getElementById('addRoomBtn');
-        const closeModal = document.getElementById('closeModal');
-        const saveRoom = document.getElementById('saveRoom');
-        const scheduleModal = document.getElementById('scheduleModal');
-        const closeSchedule = document.getElementById('closeSchedule');
-        const toast = document.getElementById('toast');
-
         addBtn.addEventListener('click', () => {
             document.getElementById('modalTitle').innerText = '➕ Add Room';
             roomModal.classList.add('active');
@@ -640,6 +639,7 @@ if ($res) {
     })();
 </script>
 <style>.btn-outline { border:1.5px solid var(--navy); background:white; padding:0.6rem 1.5rem; border-radius:50px; cursor:pointer; }</style>
+<script src="theme.js"></script>
 </body>
 </html>
 

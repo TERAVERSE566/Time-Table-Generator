@@ -291,3 +291,39 @@ body.dark-mode .badge, body.dark-mode .status-badge {
 }
 body.dark-mode .status-badge.active { background: #14532d !important; color: #bbf7d0 !important; }
 body.dark-mode .status-badge.inactive { background: #7f1d1d !important; color: #fecaca !important; }
+
+/* Admin Dashboard specific dark mode */
+body.dark-mode .sidebar { background: #0c1222 !important; }
+body.dark-mode .header { background: #1e293b !important; border-bottom: 1px solid #334155 !important; }
+body.dark-mode .content { background: #0f172a !important; }
+body.dark-mode .main { background: #0f172a !important; }
+body.dark-mode .search-bar input { background: #334155 !important; color: #e2e8f0 !important; border-color: #475569 !important; }
+body.dark-mode .chart-card { background: #1e293b !important; border: 1px solid #334155 !important; }
+body.dark-mode .action-btn { background: #1e293b !important; color: #e2e8f0 !important; border: 1px solid #334155 !important; }
+body.dark-mode .action-btn:hover { background: #334155 !important; }
+body.dark-mode .feed, body.dark-mode .tasks, body.dark-mode .system-health { background: #1e293b !important; border: 1px solid #334155 !important; color: #e2e8f0 !important; }
+body.dark-mode .feed-item, body.dark-mode .task-item { border-bottom-color: #334155 !important; color: #cbd5e1 !important; }
+body.dark-mode .welcome h1 { color: #f1f5f9 !important; }
+body.dark-mode .year-selector select { background: #334155 !important; color: #e2e8f0 !important; }
+
+/* Management pages dark mode */
+body.dark-mode .course-card, body.dark-mode .room-card, body.dark-mode .student-card,
+body.dark-mode .search-panel, body.dark-mode .filter-panel, body.dark-mode .search-section,
+body.dark-mode .util-card, body.dark-mode .sem-box, body.dark-mode .table-view {
+    background: #1e293b !important;
+    border-color: #334155 !important;
+    color: #e2e8f0 !important;
+}
+body.dark-mode .code, body.dark-mode .name, body.dark-mode .room-name,
+body.dark-mode .dept-name, body.dark-mode .stat-info .value,
+body.dark-mode .value, body.dark-mode .cgpa-indicator { 
+    color: #f1f5f9 !important; 
+}
+body.dark-mode .meta, body.dark-mode .building, body.dark-mode .roll,
+body.dark-mode .action-icons { color: #94a3b8 !important; }
+body.dark-mode .floor-plan { background: #0c1222 !important; }
+body.dark-mode .type-badge { background: #334155 !important; color: #38bdf8 !important; }
+body.dark-mode .enrollment, body.dark-mode .facility-badge { background: #334155 !important; color: #cbd5e1 !important; }
+body.dark-mode .toast { background: #6366f1 !important; }
+body.dark-mode .btn-secondary { background: #334155 !important; color: #e2e8f0 !important; }
+body.dark-mode .export-btn { background: #334155 !important; color: #e2e8f0 !important; }

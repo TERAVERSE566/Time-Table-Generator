@@ -759,6 +759,7 @@ if ($dRes) {
 </script>
 
 <!-- load FullCalendar (already included) -->
+<script src="theme.js"></script>
 </body>
 </html>
 
