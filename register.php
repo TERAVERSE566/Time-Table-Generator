@@ -457,6 +457,9 @@ try {
         <div class="button-group">
           <button type="button" class="btn btn-primary" id="nextToStep2">Next →</button>
         </div>
+        <div style="text-align:center; margin-top:1.5rem; font-size:0.95rem; color:var(--gray-600);">
+          Already have an account? <a href="login.php" style="color:var(--navy); font-weight:600; text-decoration:none;">Login here</a>
+        </div>
       </div>
 
       <!-- STEP 2 – ROLE DETAILS -->
