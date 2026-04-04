@@ -503,9 +503,9 @@ try {
           </div>
         </div>
 
-        <!-- math captcha simulation -->
+        <!-- dynamic math captcha -->
         <div class="captcha-box">
-          <span>🧮 Verify: 5 + 3 =</span>
+          <span id="captchaPrompt">🧮 Verify: ? + ? =</span>
           <input type="number" name="captcha_answer" id="captchaAnswer" class="input-field" style="width:100px;" placeholder="?">
           <span id="captchaError" style="color:red;"></span>
         </div>
@@ -569,6 +569,13 @@ try {
     const privacyCheck = document.getElementById('privacyCheck');
     const captchaAnswer = document.getElementById('captchaAnswer');
     const captchaError = document.getElementById('captchaError');
+    const captchaPrompt = document.getElementById('captchaPrompt');
+
+    // Generate Dynamic Captcha
+    let captchaNum1 = Math.floor(Math.random() * 10) + 1;
+    let captchaNum2 = Math.floor(Math.random() * 10) + 1;
+    let expectedCaptchaSum = captchaNum1 + captchaNum2;
+    captchaPrompt.innerText = `🧮 Verify: ${captchaNum1} + ${captchaNum2} =`;
 
     // success overlay
     const successOverlay = document.getElementById('successOverlay');
@@ -717,8 +724,17 @@ try {
     // -------- create account (step3 validation + success) -------
     createAccountBtn.addEventListener('click', (e) => {
       e.preventDefault();
-      const captchaValid = parseInt(captchaAnswer.value) === 8;
-      if (!captchaValid) { captchaError.innerText = ' wrong answer'; return; }
+      const captchaValid = parseInt(captchaAnswer.value) === expectedCaptchaSum;
+      if (!captchaValid) { 
+          captchaError.innerText = ' wrong answer'; 
+          // regenerate
+          captchaNum1 = Math.floor(Math.random() * 10) + 1;
+          captchaNum2 = Math.floor(Math.random() * 10) + 1;
+          expectedCaptchaSum = captchaNum1 + captchaNum2;
+          captchaPrompt.innerText = `🧮 Verify: ${captchaNum1} + ${captchaNum2} =`;
+          captchaAnswer.value = '';
+          return; 
+      }
       else captchaError.innerText = '';
 
       if (!termsCheck.checked || !privacyCheck.checked) {

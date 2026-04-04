@@ -28,9 +28,13 @@ $themeClass = 'theme-admin';
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TimetableGen · Admin Dashboard</title>
-    <!-- Font Awesome 6 (free icons) & Chart.js 3 -->
+    <!-- Font Awesome 6 (free icons) & Chart.js 3 & DataTables -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <!-- jQuery & DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -342,12 +346,28 @@ $themeClass = 'theme-admin';
             padding: 1.2rem;
             overflow-x: auto;
         }
-        table {
-            width: 100%;
-            border-collapse: collapse;
+        /* data table overrides */
+        .table-section {
+            background: var(--bg-card);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            overflow-x: auto;
         }
-        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid #2d3b4f; }
-        th { color: var(--accent-gold); }
+        table.dataTable { border-collapse: collapse; width: 100% !important; margin-top: 1rem !important; }
+        table.dataTable th, table.dataTable td { padding: 1rem; text-align: left; border-bottom: 1px solid #2d3b4f; }
+        table.dataTable th { color: var(--accent-gold); border-bottom: 2px solid #2d3b4f !important; }
+        .dataTables_wrapper .dataTables_filter input, .dataTables_wrapper .dataTables_length select {
+            background: #1e2a3a;
+            color: white;
+            border: 1px solid #3d506e;
+            border-radius: 50px;
+            padding: 0.3rem 0.8rem;
+            margin-left: 0.5rem;
+            outline: none;
+        }
+        .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter label { color: var(--text-secondary) !important; }
+        .dataTables_wrapper .dataTables_paginate .paginate_button { color: var(--text-primary) !important; border-radius: 5px; }
+        .dataTables_wrapper .dataTables_paginate .paginate_button.current { background: #38bdf8 !important; color: #1e2a3a !important; border: none; }
 
         /* modal dummy */
         .modal-placeholder { display: none; }
@@ -489,7 +509,7 @@ $themeClass = 'theme-admin';
             <!-- Data Table: recent generations -->
             <div class="table-section">
                 <h3 style="margin-bottom:1rem;">📅 Recent Timetable Generations</h3>
-                <table>
+                <table id="recentGenerationsTable" class="display" style="width:100%">
                     <thead><tr><th>Dept</th><th>Semester</th><th>Generated on</th><th>Status</th><th>Actions</th></tr></thead>
                     <tbody>
                         <tr><td>Computer Science</td><td>4</td><td>2025-03-18</td><td><span class="status-badge success">active</span></td><td><i class="fas fa-eye"></i></td></tr>
@@ -502,12 +522,14 @@ $themeClass = 'theme-admin';
 
             <!-- dummy second table: faculty on leave -->
             <div class="table-section">
-                <h3>🏖️ Faculty on Leave (today)</h3>
-                <table>
-                    <tr><th>Name</th><th>Department</th><th>Type</th></tr>
-                    <tr><td>Prof. Carter</td><td>Mathematics</td><td>Sick</td></tr>
-                    <tr><td>Dr. Evans</td><td>Physics</td><td>Conference</td></tr>
-                    <tr><td>Ms. Davis</td><td>Computer Sci</td><td>Vacation</td></tr>
+                <h3 style="margin-bottom:1rem;">🏖️ Faculty on Leave (today)</h3>
+                <table id="facultyLeaveTable" class="display" style="width:100%">
+                    <thead><tr><th>Name</th><th>Department</th><th>Type</th></tr></thead>
+                    <tbody>
+                        <tr><td>Prof. Carter</td><td>Mathematics</td><td>Sick</td></tr>
+                        <tr><td>Dr. Evans</td><td>Physics</td><td>Conference</td></tr>
+                        <tr><td>Ms. Davis</td><td>Computer Sci</td><td>Vacation</td></tr>
+                    </tbody>
                 </table>
             </div>
         </div> <!-- end content -->
@@ -518,6 +540,22 @@ $themeClass = 'theme-admin';
 <div style="display: none;">modals would appear here</div>
 
 <script>
+    $(document).ready(function() {
+        $('#recentGenerationsTable').DataTable({
+            "pageLength": 5,
+            "lengthMenu": [5, 10, 20],
+            "language": {
+                "search": "Filter records:"
+            }
+        });
+        $('#facultyLeaveTable').DataTable({
+            "pageLength": 3,
+            "lengthMenu": [3, 5, 10],
+            "searching": false,
+            "info": false
+        });
+    });
+
     (function() {
         // ------ SIDEBAR COLLAPSE ------
         const sidebar = document.getElementById('sidebar');

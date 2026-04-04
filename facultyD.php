@@ -572,6 +572,14 @@ $initials = strtoupper(substr($user_name, 0, 1) . (strpos($user_name, ' ') ? sub
                     </div>
                 </div>
             </div>
+
+            <!-- Class Attendance Trends Chart -->
+            <div class="schedule-card">
+                <h3>📊 Class Attendance Trends</h3>
+                <div style="margin-top: 1rem;">
+                    <canvas id="facultyChart" height="150"></canvas>
+                </div>
+            </div>
         </div>
 
         <!-- right column -->
@@ -697,6 +705,7 @@ $initials = strtoupper(substr($user_name, 0, 1) . (strpos($user_name, ' ') ? sub
   </div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 (function() {
     // ===== GREETING =====
@@ -795,6 +804,39 @@ $initials = strtoupper(substr($user_name, 0, 1) . (strpos($user_name, ' ') ? sub
         const presentCount = document.querySelectorAll('.attend-radio[value="present"]:checked').length;
         countSpan.textContent = `Present: ${presentCount} / ${students.length}`;
     }
+
+    // Initialize Chart.js
+    const ctx = document.getElementById('facultyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Week 5'],
+            datasets: [
+                {
+                    label: 'CS501',
+                    data: [88, 85, 90, 87, 92],
+                    borderColor: '#1e4f6e',
+                    backgroundColor: 'rgba(30, 79, 110, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                },
+                {
+                    label: 'CS410',
+                    data: [75, 78, 80, 85, 84],
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    tension: 0.4,
+                    fill: false
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { min: 50, max: 100 }
+            }
+        }
+    });
 
     // Open modal
     attendBtn.addEventListener('click', () => {

@@ -124,6 +124,7 @@ while($r = $res->fetch_assoc()) $facultyArray[] = $r;
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -182,6 +183,42 @@ while($r = $res->fetch_assoc()) $facultyArray[] = $r;
             font-weight: 600;
             border: 1px solid var(--gray-300);
         }
+        
+        .dark-mode-toggle {
+            background: var(--gray-300);
+            border: none;
+            border-radius: 30px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            margin-left: 1rem;
+        }
+
+        /* ===== PROPER DARK MODE ===== */
+        body.dark-mode {
+            background: #0f172a !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode .step-panel, 
+        body.dark-mode .progress-container,
+        body.dark-mode .alt-card,
+        body.dark-mode [style*="background: white"],
+        body.dark-mode [style*="background:white"] {
+            background: #1e293b !important;
+            border: 1px solid #334155 !important;
+            color: #e2e8f0 !important;
+        }
+        body.dark-mode .header-title h1,
+        body.dark-mode h2, body.dark-mode h3 { color: #f1f5f9 !important; }
+        body.dark-mode .form-group label { color: #94a3b8 !important; }
+        body.dark-mode input, body.dark-mode select { background: #334155 !important; border-color: #475569 !important; color: white !important; }
+        body.dark-mode .course-row { background: #334155 !important; }
+        body.dark-mode .timetable-header { background: #334155 !important; }
+        body.dark-mode .time-slot { background: #475569 !important; }
+        body.dark-mode .class-cell { background: #1e4f6e !important; color: white !important; }
+        body.dark-mode .class-cell[style*="background:#e0f2fe"] { background: #0c4a6e !important; }
+        body.dark-mode .stat-card { background: #334155 !important; }
 
         /* wizard progress */
         .wizard-progress {
@@ -394,10 +431,14 @@ while($r = $res->fetch_assoc()) $facultyArray[] = $r;
             <h1>⚡ Smart Timetable Generator</h1>
             <p>Generate optimal timetables with AI-powered algorithms</p>
         </div>
-        <select class="year-selector">
-            <option>Academic Year 2024-25</option>
-            <option>2025-26</option>
-        </select>
+        <div style="display: flex; align-items: center;">
+            <select class="year-selector">
+                <option>Academic Year 2024-25</option>
+                <option>2025-26</option>
+            </select>
+            <button class="dark-mode-toggle" id="darkToggle"><i class="fas fa-moon"></i> Dark</button>
+            <button class="btn-outline" style="margin-left: 1rem; border-radius: 30px; padding: 0.5rem 1rem;" onclick="window.location.href='admin.php'"><i class="fas fa-arrow-left"></i> Home</button>
+        </div>
     </div>
 
     <!-- wizard steps -->
@@ -667,15 +708,56 @@ while($r = $res->fetch_assoc()) $facultyArray[] = $r;
             html2pdf().from(element).save('timetable.pdf').then(()=>showToast('✅ PDF Exported!'));
         });
         document.getElementById('printBtn').addEventListener('click', () => window.print());
-        document.getElementById('exportExcelBtn').addEventListener('click', () => showToast('❌ Excel Export pending'));
+        
+        document.getElementById('exportExcelBtn').addEventListener('click', () => {
+            const table = document.getElementById('genTimetableGrid');
+            if (table) {
+                let rows = [];
+                const headers = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+                rows.push(headers);
+                const cells = Array.from(table.children).slice(6);
+                let currentRowIdx = 0;
+                let currentRow = [];
+                cells.forEach((cell, idx) => {
+                    let text = cell.innerText.replace(/\n+/g, ' ').trim();
+                    currentRow.push(text);
+                    if ((idx + 1) % 6 === 0) {
+                        rows.push(currentRow);
+                        currentRow = [];
+                    }
+                });
+                const ws = XLSX.utils.aoa_to_sheet(rows);
+                const wb = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(wb, ws, "Timetable");
+                XLSX.writeFile(wb, "timetable.xlsx");
+                showToast('✅ Excel Exported!');
+            } else {
+                showToast('❌ No timetable generated yet');
+            }
+        });
+        
         document.getElementById('shareBtn').addEventListener('click', () => {
             navigator.clipboard.writeText(window.location.href);
             showToast('✅ Link copied to clipboard');
         });
 
+        // Dark mode setup
+        const darkToggle = document.getElementById('darkToggle');
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            darkToggle.innerHTML = '<i class="fas fa-sun"></i> Light';
+        }
+        darkToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            darkToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i> Light' : '<i class="fas fa-moon"></i> Dark';
+        });
+
         showStep(1);
     })();
 </script>
+<script src="theme.js"></script>
 </body>
 </html>
 

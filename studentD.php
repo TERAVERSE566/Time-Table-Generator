@@ -380,6 +380,9 @@ if ($row = $res->fetch_assoc()) {
                     <div class="attend-row"><span>CS311 Lab</span> <div class="progress"><div class="progress-fill" style="width:78%"></div></div> 78%</div>
                     <div class="attend-row"><span>MA201</span> <div class="progress"><div class="progress-fill warning-fill" style="width:65%"></div></div> <span style="color:red;">65% (below 75%)</span></div>
                 </div>
+                <div style="margin-top: 1.5rem;">
+                    <canvas id="attendanceChart" height="150"></canvas>
+                </div>
                 <p><i class="fas fa-exclamation-triangle" style="color:red;"></i> Warning: MA201 attendance low!</p>
             </div>
 
@@ -463,8 +466,45 @@ if ($row = $res->fetch_assoc()) {
         const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
         const today = new Date().toLocaleDateString(undefined, options);
         // update if needed
+        
+        // Initialize Chart.js
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ['CS301', 'CS311 Lab', 'MA201', 'Elective'],
+                datasets: [{
+                    label: 'Attendance %',
+                    data: [92, 78, 65, 88],
+                    backgroundColor: [
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(16, 185, 129, 0.7)',
+                        'rgba(239, 68, 68, 0.7)',
+                        'rgba(16, 185, 129, 0.7)'
+                    ],
+                    borderColor: [
+                        '#10b981',
+                        '#10b981',
+                        '#ef4444',
+                        '#10b981'
+                    ],
+                    borderWidth: 1,
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: { beginAtZero: true, max: 100 }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
     })();
 </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="theme.js"></script>
 </body>
 </html>
