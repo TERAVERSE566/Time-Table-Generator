@@ -440,7 +440,10 @@ if (isset($_GET['registered']) && $_GET['registered'] == 1) {
             .brand-side { min-height: 280px; }
             .brand-content h2 { font-size: 2.3rem; }
             .floating-icons { font-size: 2.5rem; gap: 1rem; }
-            .form-side { padding: 2rem; }
+            .form-side { padding: 1.5rem; }
+            .role-tabs { flex-direction: column; border-radius: 20px; }
+            .role-tab { padding: 0.6rem; border-radius: 12px; }
+            .social-buttons { flex-direction: column; gap: 0.5rem; }
             .chat-bubble { bottom: 1rem; right: 1rem; }
         }
 

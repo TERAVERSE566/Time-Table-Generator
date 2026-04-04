@@ -35,6 +35,7 @@ $themeClass = 'theme-admin';
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="premium.css">
     <style>
         * {
             margin: 0;
@@ -373,25 +374,26 @@ $themeClass = 'theme-admin';
         .modal-placeholder { display: none; }
 
         /* responsiveness */
-        @media (max-width: 900px) {
-            .sidebar { width: 70px; }
+        @media (max-width: 1024px) {
+            .sidebar { width: 70px !important; position: relative !important; height: 100vh !important; padding-bottom: 0 !important; margin-bottom: 0 !important; }
             .sidebar .logo span, .sidebar .menu-item span:not(.emoji), .sidebar .logout span { display: none; }
-            .main { width: calc(100% - 70px); }
+            .main { width: calc(100% - 70px) !important; }
             .stats-grid { grid-template-columns: 1fr 1fr; }
             .charts-grid { grid-template-columns: 1fr; }
         }
-        @media (max-width: 600px) {
-            .sidebar { position: absolute; z-index: 1000; height: 100%; transform: translateX(-100%); }
-            .sidebar.active { transform: translateX(0); width: 200px; }
+        @media (max-width: 768px) {
+            .dashboard { flex-direction: row !important; }
+            .sidebar { position: fixed !important; z-index: 1000 !important; height: 100vh !important; transform: translateX(-100%) !important; width: 260px !important; transition: transform 0.3s ease; }
+            .sidebar.active { transform: translateX(0) !important; }
             .sidebar.active .logo span, .sidebar.active .menu-item span:not(.emoji), .sidebar.active .logout span { display: inline; }
-            .main { width: 100%; }
+            .main { width: 100vw !important; flex: 1 !important; margin-left: 0 !important; }
+            .content { padding: 1rem 1rem 4rem 1rem !important; width: 100vw !important; box-sizing: border-box !important; }
             .header-right .admin-profile span { display: none; }
             .welcome-row { flex-direction: column; align-items: flex-start; gap: 1rem; }
             .stats-grid { grid-template-columns: 1fr; }
             .bottom-flex { flex-direction: column; }
         }
     </style>
-    <link rel="stylesheet" href="premium.css">
 </head>
 <body class="<?= htmlspecialchars($themeClass) ?>">
 <div class="dashboard" id="dashboard">

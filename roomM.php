@@ -77,7 +77,8 @@ if ($res) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- FullCalendar for schedule views -->
     <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="premium.css">
     <style>
         * {
             margin: 0;
@@ -355,8 +356,21 @@ if ($res) {
             padding: 2rem;
             text-align: center;
         }
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .header-section { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .action-group { flex-wrap: wrap; width: 100%; }
+            .action-group button { flex: 1; min-width: 120px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .filter-bar { flex-wrap: wrap; align-items: flex-start; gap: 0.5rem; }
+            .filter-group { flex: 1; min-width: 100px; }
+            .filter-group select, .filter-group input { width: 100%; }
+            .modal-content { width: 95%; padding: 1.5rem; border-radius: 1.5rem; }
+            .form-row { flex-direction: column; gap: 0.5rem; }
+            .util-dashboard { flex-direction: column; }
+            .floor-plan { max-width: 100vw; overflow-x: scroll; }
+        }
     </style>
-    <link rel="stylesheet" href="premium.css">
 </head>
 <body>
 <div class="container">

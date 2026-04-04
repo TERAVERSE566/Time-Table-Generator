@@ -84,7 +84,8 @@ if($dRes) {
     <!-- Font Awesome 6 & Google Fonts -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- simple vis.js for prerequisite graph -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="premium.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis.min.css" />
     <style>
         * {
@@ -335,8 +336,17 @@ if($dRes) {
             padding: 1rem;
             box-shadow: var(--shadow-md);
         }
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .header-section { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .action-group { flex-wrap: wrap; width: 100%; }
+            .action-group button { flex: 1; min-width: 120px; }
+            .filter-bar { flex-direction: column; align-items: stretch; gap: 1rem; }
+            .filter-item input, .filter-item select { width: 100%; }
+            .modal-content { width: 95%; padding: 1.5rem; border-radius: 1.5rem; }
+            .courses-grid { grid-template-columns: 1fr; }
+        }
     </style>
-    <link rel="stylesheet" href="premium.css">
 </head>
 <body>
 <div class="container">

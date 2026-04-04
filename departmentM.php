@@ -95,6 +95,11 @@ foreach($deptsArray as $d) {
     <title>TimetableGen · Department Management</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- jQuery & DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="premium.css">
     <style>
         * {
             margin: 0;
@@ -464,11 +469,19 @@ foreach($deptsArray as $d) {
         }
 
         /* responsiveness */
-        @media (max-width: 600px) {
+        @media (max-width: 768px) {
             body { padding: 1rem; }
+            .header-section { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .search-section { flex-direction: column; align-items: stretch; gap: 1rem; }
+            .filter-group { flex-direction: column; }
+            .filter-group select, .filter-group button, .search-box { width: 100%; box-sizing: border-box; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .modal-content { width: 95%; padding: 1.5rem; border-radius: 1.5rem; }
+            .detail-tabs { flex-direction: column; border-bottom: none; gap: 0.5rem; }
+            .tab { border-bottom: none !important; border-left: 3px solid transparent; text-align: left; }
+            .tab.active { border-left: 3px solid var(--gold); border-bottom: none !important; background: var(--off-white); }
         }
     </style>
-    <link rel="stylesheet" href="premium.css">
 </head>
 <body>
 <div class="container">
@@ -714,7 +727,16 @@ foreach($deptsArray as $d) {
             document.getElementById('detailContent').innerHTML = `Showing details for <b>${dept.name}</b> (${dept.code}). <br> Head: ${dept.hod}. <br> Faculty: ${dept.faculty}, Students: ${dept.students}.`;
         };
 
-            // Submit to PHP via fetch
+        saveBtn.addEventListener('click', () => {
+            const name = document.getElementById('deptName').value;
+            const code = document.getElementById('deptCode').value;
+            const hod = document.getElementById('deptHod').value;
+            const description = document.getElementById('deptDesc').value;
+            const est = document.getElementById('deptEst').value.split('-')[0];
+            const email = document.getElementById('deptEmail').value;
+            const phone = document.getElementById('deptPhone').value;
+            const status = document.getElementById('deptStatus').checked ? 'active' : 'inactive';
+
             const fd = new FormData();
             fd.append('action', 'add');
             if(editingId) fd.append('id', editingId);
@@ -738,6 +760,7 @@ foreach($deptsArray as $d) {
                     alert('Error: ' + data.message);
                 }
             });
+        });
 
         confirmDeleteBtn.addEventListener('click', () => {
             const fd = new FormData();

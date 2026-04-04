@@ -107,6 +107,11 @@ if ($dRes) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Chart.js for analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <!-- jQuery & DataTables -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="premium.css">
     <style>
         * {
             margin: 0;
@@ -421,8 +426,20 @@ if ($dRes) {
             flex: 1 1 250px;
         }
         canvas { max-height: 200px; width: 100% !important; }
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .header-section { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .action-group { flex-wrap: wrap; width: 100%; }
+            .action-group button { flex: 1; min-width: 120px; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .filter-bar { flex-direction: column; align-items: stretch; gap: 1rem; }
+            .filter-group, .search-box { width: 100%; box-sizing: border-box; }
+            .filter-group select { width: 100%; box-sizing: border-box; }
+            .modal-content { width: 95%; padding: 1.5rem; border-radius: 1.5rem; }
+            .form-grid { grid-template-columns: 1fr; }
+            .analytics-row { flex-direction: column; }
+        }
     </style>
-    <link rel="stylesheet" href="premium.css">
 </head>
 <body>
 <div class="container">

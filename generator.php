@@ -123,6 +123,7 @@ while($r = $res->fetch_assoc()) $facultyArray[] = $r;
     <title>TimetableGen · Smart Generator</title>
     <!-- Font Awesome 6 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="premium.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
@@ -420,8 +421,18 @@ while($r = $res->fetch_assoc()) $facultyArray[] = $r;
             flex: 1;
             text-align: center;
         }
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .header-section { flex-direction: column; align-items: flex-start; gap: 1rem; }
+            .wizard-progress { flex-direction: column; align-items: flex-start; gap: 1rem; padding-left: 2rem; }
+            .wizard-progress::before { top: 0; bottom: 0; left: 45px; height: 100%; width: 4px; }
+            .step { display: flex; align-items: center; gap: 1rem; text-align: left; }
+            .step .circle { margin: 0; }
+            .form-grid { grid-template-columns: 1fr; }
+            .timetable-grid { display: block; overflow-x: auto; white-space: nowrap; }
+            .step-panel { padding: 1.5rem; }
+        }
     </style>
-    <link rel="stylesheet" href="premium.css">
 </head>
 <body>
 <div class="container">
