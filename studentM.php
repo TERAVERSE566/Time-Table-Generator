@@ -73,7 +73,7 @@ if ($res) {
 
         $studentArray[] = [
             'id' => $row['id'],
-            'roll' => $row['roll_number'] ?: 'N/A',
+            'roll' => $row['roll_number'] ?? 'N/A',
             'name' => $row['name'],
             'dept' => $row['department'] ?: 'N/A',
             'year' => $year,
@@ -81,8 +81,8 @@ if ($res) {
             'cgpa' => (float)($row['cgpa'] ?? 0.0),
             'attendance' => (int)($row['attendance_percent'] ?? 0),
             'status' => $status,
-            'batch' => $row['batch_year'] ?: '2024',
-            'section' => $row['section'] ?: 'A',
+            'batch' => $row['batch_year'] ?? '2024',
+            'section' => $row['section'] ?? 'A',
             'avatar' => $initials
         ];
     }
@@ -574,7 +574,6 @@ if ($dRes) {
 <div id="toast" class="toast">✅ Done</div>
 
 <script>
-    (function() {
     (function() {
         // dynamic students array from PHP
         let students = <?= json_encode($studentArray) ?>;

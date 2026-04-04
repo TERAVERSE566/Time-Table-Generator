@@ -641,23 +641,22 @@ if ($dRes) {
 
         // modals
         const facultyModal = document.getElementById('facultyModal');
+        const modalTitle = document.getElementById('modalTitle');
+        const facultyForm = document.getElementById('facultyForm');
         const addBtn = document.getElementById('addFacultyBtn');
         const closeModal = document.getElementById('closeModal');
         const saveFaculty = document.getElementById('saveFaculty');
+        const deleteModal = document.getElementById('deleteModal');
+        const confirmDeleteBtn = document.getElementById('confirmDelete');
+        const cancelDeleteBtn = document.getElementById('cancelDelete');
         const detailsModal = document.getElementById('detailsModal');
         const closeDetails = document.getElementById('closeDetails');
         const toast = document.getElementById('toast');
 
         addBtn.addEventListener('click', () => {
             editingId = null;
-            document.getElementById('modalTitle').innerText = '➕ Add Faculty';
-            document.getElementById('fName').value = '';
-            document.getElementById('fEmail').value = '';
-            document.getElementById('fPhone').value = '';
-            document.getElementById('fEmpId').value = '';
-            document.getElementById('fSpec').value = '';
-            document.getElementById('fPassword').value = '';
-            document.getElementById('fPassword').disabled = false;
+            modalTitle.innerText = '➕ Add Faculty';
+            if(facultyForm) facultyForm.reset();
             facultyModal.classList.add('active');
         });
 

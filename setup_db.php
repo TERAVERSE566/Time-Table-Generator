@@ -17,6 +17,17 @@ try {
         program_level VARCHAR(50) NULL,
         department VARCHAR(50) NULL,
         current_semester INT DEFAULT 1,
+        profile_photo VARCHAR(255) NULL,
+        roll_number VARCHAR(50) NULL,
+        batch_year VARCHAR(20) NULL,
+        section VARCHAR(10) DEFAULT 'A',
+        student_status VARCHAR(30) DEFAULT 'Active',
+        current_year INT DEFAULT 1,
+        cgpa DECIMAL(4,2) DEFAULT 0.00,
+        attendance_percent INT DEFAULT 100,
+        employee_id VARCHAR(50) NULL,
+        specialization VARCHAR(100) NULL,
+        availability VARCHAR(50) DEFAULT 'available',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
     $conn->query($sql_users);

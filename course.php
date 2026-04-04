@@ -295,13 +295,59 @@ if($dRes) {
             gap: 0.5rem;
             border-bottom: 1px solid var(--gray-300);
             margin: 1rem 0;
+            overflow-x: auto;
         }
         .tab {
             padding: 0.7rem 1.5rem;
             cursor: pointer;
             font-weight: 600;
+            color: var(--gray-600);
+            white-space: nowrap;
         }
+        .tab:hover { color: var(--navy); }
         .tab.active { color: var(--navy); border-bottom: 3px solid var(--gold); }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+            gap: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            font-weight: 600;
+            color: var(--navy);
+            margin-bottom: 0.5rem;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            border: 1px solid var(--gray-300);
+            background: var(--gray-100);
+            font-size: 1rem;
+            outline: none;
+            transition: 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--navy);
+            box-shadow: 0 0 0 3px rgba(10,59,91,0.1);
+        }
+        .tab-pane {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .tab-pane.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
         /* prerequisite graph */
         #graph-container {
@@ -420,44 +466,76 @@ if($dRes) {
     <div class="modal-content">
         <h2 id="modalTitle">➕ Add Course</h2>
         <div class="tabs">
-            <span class="tab active">Basic</span>
-            <span class="tab">Scheduling</span>
-            <span class="tab">Prerequisites</span>
-            <span class="tab">Faculty</span>
-            <span class="tab">Syllabus</span>
+            <span class="tab active" data-tab="basic">Basic</span>
+            <span class="tab" data-tab="scheduling">Scheduling</span>
+            <span class="tab" data-tab="prerequisites">Prerequisites</span>
+            <span class="tab" data-tab="faculty">Faculty</span>
+            <span class="tab" data-tab="syllabus">Syllabus</span>
         </div>
         <form id="courseForm">
-            <div class="form-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                <div><label>Course Code</label><input type="text" id="code" placeholder="CS501" required></div>
-                <div><label>Course Name</label><input type="text" id="cname" placeholder="Machine Learning" required></div>
-                <div><label>Department</label>
-                    <select id="cdept">
-                        <?php foreach($deptsArray as $d): ?>
-                            <option value="<?= htmlspecialchars($d['code']) ?>"><?= htmlspecialchars($d['name']) ?></option>
-                        <?php endforeach; ?>
+            <!-- Basic Tab -->
+            <div id="tab-basic" class="tab-pane active">
+                <div class="form-grid">
+                    <div class="form-group"><label>Course Code</label><input type="text" id="code" placeholder="CS501" required></div>
+                    <div class="form-group"><label>Course Name</label><input type="text" id="cname" placeholder="Machine Learning" required></div>
+                    <div class="form-group"><label>Department</label>
+                        <select id="cdept">
+                            <?php foreach($deptsArray as $d): ?>
+                                <option value="<?= htmlspecialchars($d['code']) ?>"><?= htmlspecialchars($d['name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scheduling Tab -->
+            <div id="tab-scheduling" class="tab-pane">
+                <div class="form-grid">
+                    <div class="form-group"><label>Credits</label><input type="number" id="ccredits" value="4" min="1" max="10"></div>
+                    <div class="form-group"><label>Hours/week</label><input value="3"></div>
+                    <div class="form-group"><label>Type</label>
+                        <select id="ctype">
+                            <option value="Theory">Theory</option>
+                            <option value="Lab">Lab</option>
+                            <option value="Elective">Elective</option>
+                        </select>
+                    </div>
+                    <div class="form-group"><label>Semester</label><input value="5"></div>
+                    <div class="form-group"><label>Status</label><select id="cstatus"><option value="active">Active</option><option value="inactive">Draft</option></select></div>
+                </div>
+            </div>
+
+            <!-- Prerequisites Tab -->
+            <div id="tab-prerequisites" class="tab-pane">
+                <div class="form-group"><label>Prerequisites (multi-select)</label>
+                    <select multiple size="5" style="border-radius:1rem; padding: 1rem;">
+                        <option>CS101 - Introduction to Programming</option>
+                        <option>CS201 - Data Structures</option>
+                        <option>MA101 - Calculus</option>
+                    </select>
+                    <small style="color:var(--gray-600); margin-top:0.5rem; display:block;">Hold Ctrl/Cmd to select multiple prerequisites.</small>
+                </div>
+            </div>
+
+            <!-- Faculty Tab -->
+            <div id="tab-faculty" class="tab-pane">
+                <div class="form-group"><label>Assigned Faculty / Coordinator</label>
+                    <select>
+                        <option>Dr. Chen</option>
+                        <option>Prof. Miller</option>
+                        <option>Dr. Ray</option>
                     </select>
                 </div>
-                <div><label>Credits</label><input type="number" id="ccredits" value="4" min="1" max="10"></div>
-                <div><label>Hours/week</label><input value="3"></div>
-                <div><label>Type</label>
-                    <select id="ctype">
-                        <option value="Theory">Theory</option>
-                        <option value="Lab">Lab</option>
-                        <option value="Elective">Elective</option>
-                    </select>
-                </div>
-                <div><label>Semester</label><input value="5"></div>
-                <div><label>Status</label><select id="cstatus"><option value="active">Active</option><option value="inactive">Draft</option></select></div>
             </div>
-            <div><label>Prerequisites (multi-select)</label>
-                <select multiple size="3">
-                    <option>CS101</option><option>CS201</option><option>MA101</option>
-                </select>
+
+            <!-- Syllabus Tab -->
+            <div id="tab-syllabus" class="tab-pane">
+                <div class="form-group"><label>Syllabus (PDF link)</label><input type="text" value="syllabus.pdf" placeholder="https://..."></div>
             </div>
-            <div><label>Syllabus (PDF link)</label><input value="syllabus.pdf"></div>
-            <div style="margin-top:2rem;">
-                <button type="button" class="btn-primary" id="saveCourse">Save Course</button>
+
+            <div class="action-bar" style="margin-top:2.5rem; display:flex; gap:1rem; justify-content:flex-end; border-top: 1px solid var(--gray-300); padding-top: 1.5rem;">
                 <button type="button" class="btn-outline" id="closeModal">Cancel</button>
+                <button type="button" class="btn-primary" id="saveCourse">Save Course</button>
             </div>
         </form>
     </div>
@@ -616,6 +694,20 @@ if($dRes) {
             toast.style.display = 'flex';
             setTimeout(() => toast.style.display = 'none', 2000);
         }
+
+        // tab switching logic
+        const courseTabs = document.querySelectorAll('#courseModal .tab');
+        const coursePanes = document.querySelectorAll('#courseModal .tab-pane');
+        courseTabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                courseTabs.forEach(t => t.classList.remove('active'));
+                coursePanes.forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                if (tab.dataset.tab) {
+                    document.getElementById('tab-' + tab.dataset.tab).classList.add('active');
+                }
+            });
+        });
 
         // filter events
         document.getElementById('deptFilter').addEventListener('change', renderCourses);

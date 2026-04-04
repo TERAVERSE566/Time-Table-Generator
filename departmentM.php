@@ -540,6 +540,7 @@ foreach($deptsArray as $d) {
             <span class="tab" data-tab="timetable">Timetable</span>
         </div>
         <div id="detailContent">Select a department to view details</div>
+        <button class="btn-secondary" id="closeDetail" style="margin-top:1rem; padding:0.6rem 1.5rem; border-radius:50px; border:none; background:#e2e8f0; cursor:pointer;">Close</button>
     </div>
 </div>
 
@@ -615,6 +616,12 @@ foreach($deptsArray as $d) {
         // current edit id (null for add)
         let editingId = null;
         let deleteId = null;
+
+        window.openDeleteModal = function(id, name) {
+            deleteId = id;
+            deleteDeptName.innerText = name;
+            deleteModal.classList.add('active');
+        };
 
         // DOM elements
         const deptGrid = document.getElementById('deptGrid');
@@ -704,6 +711,13 @@ foreach($deptsArray as $d) {
             document.getElementById('deptStatus').checked = true;
             modal.classList.add('active');
         });
+
+        closeModal.addEventListener('click', () => modal.classList.remove('active'));
+        
+        const closeDetailBtn = document.getElementById('closeDetail');
+        if(closeDetailBtn) {
+            closeDetailBtn.addEventListener('click', () => detailPanel.classList.remove('active'));
+        }
 
         // edit: fill form
         window.editDept = function(id) {
