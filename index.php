@@ -2,74 +2,43 @@
 
 <!-- Hero Section -->
 <div class="row align-items-center my-5 py-5">
-    <div class="col-lg-6 mb-5 mb-lg-0">
-        <span class="badge bg-primary text-white rounded-pill px-3 py-2 mb-3">Version 2.0 • SaaS Ready</span>
-        <h1 class="display-4 fw-bold text-dark mb-4">
-            Flawless Timetables <br><span class="text-primary">in Seconds.</span>
+    <div class="col-lg-6 mb-5 mb-lg-0 pe-lg-5">
+        <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 mb-3 border border-primary"><i class="fa-solid fa-rocket me-1"></i> SaaS Framework v3.0</span>
+        <h1 class="display-4 fw-bold text-dark mb-4" style="line-height: 1.2;">
+            Intelligent Timetables <br><span class="text-primary">Without Conflicts.</span>
         </h1>
-        <p class="lead text-muted mb-4">
-            Simplify scheduling for your entire institution. An intelligent timetable management system built with modernized conflict-resolution logic. Say goodbye to spreadsheets.
+        <p class="lead text-muted mb-4 fs-5 p-0">
+            A comprehensive, conflict-free academic scheduling platform. Leverage advanced matrix-constraint algorithms to completely automate your institution's weekly timetables.
         </p>
-        <div class="d-flex gap-3">
+        <div class="d-flex gap-3 mt-4">
             <?php if(isset($_SESSION['admin_auth'])): ?>
-                <a href="wizard_step1.php" class="btn btn-primary btn-lg rounded-pill px-4 shadow">Launch Wizard <i class="fa-solid fa-arrow-right ms-2"></i></a>
+                <a href="<?= BASE_URL ?>pages/instructions.php" class="btn btn-primary btn-lg rounded-pill px-5 shadow">Dashboard <i class="fa-solid fa-arrow-right ms-2"></i></a>
             <?php else: ?>
-                <a href="admin_login.php" class="btn btn-primary btn-lg rounded-pill px-4 shadow">Admin Login <i class="fa-solid fa-right-to-bracket ms-2"></i></a>
+                <a href="<?= BASE_URL ?>auth/login.php" class="btn btn-primary btn-lg rounded-pill px-5 shadow">Admin Login <i class="fa-solid fa-right-to-bracket ms-2"></i></a>
             <?php endif; ?>
-            <a href="#features" class="btn btn-outline-secondary btn-lg rounded-pill px-4">See Features</a>
         </div>
     </div>
-    <div class="col-lg-6 text-center">
+    
+    <div class="col-lg-6">
         <!-- Dashboard Mockup Image Placeholder -->
-        <div class="bg-white p-4 rounded-4 shadow-lg border">
-            <h4 class="text-start border-bottom pb-2 mb-3 fw-bold"><i class="fa-regular fa-calendar-check text-success me-2"></i> CE-Semester 4 Schedule</h4>
+        <div class="bg-white p-4 rounded-4 shadow-lg border" style="transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);">
+            <div class="d-flex justify-content-between border-bottom pb-2 mb-3">
+                <h5 class="fw-bold mb-0"><i class="fa-solid fa-layer-group text-primary me-2"></i> Generated Grid</h5>
+                <span class="badge bg-success"><i class="fa-solid fa-check"></i> 100% Conflict Free</span>
+            </div>
             <div class="table-responsive">
-                <table class="table table-bordered table-sm text-center">
+                <table class="table table-bordered table-sm text-center align-middle" style="font-size: 0.9rem;">
                     <thead class="table-light">
                         <tr><th>Time</th><th>Mon</th><th>Tue</th><th>Wed</th></tr>
                     </thead>
                     <tbody>
-                        <tr><td class="text-muted">09:00</td><td class="bg-primary bg-opacity-10">Math (Dr. A)</td><td>-</td><td class="bg-success bg-opacity-10">Phys (Dr. B)</td></tr>
-                        <tr><td class="text-muted">10:00</td><td>-</td><td class="bg-warning bg-opacity-10">Chem (Dr. C)</td><td class="bg-primary bg-opacity-10">Math (Dr. A)</td></tr>
+                        <tr><td class="text-muted fw-bold">09:00</td><td class="subj-card">CS-101<br><small>Dr. Smith</small></td><td class="text-muted">--</td><td class="subj-card">MT-202<br><small>Dr. Jane</small></td></tr>
+                        <tr><td class="text-muted fw-bold">10:00</td><td class="text-muted">--</td><td class="subj-card">PHY-301<br><small>Dr. Cole</small></td><td class="subj-card">CS-101<br><small>Dr. Smith</small></td></tr>
                     </tbody>
                 </table>
             </div>
-            <div class="text-end mt-2">
-                <span class="badge bg-success p-2"><i class="fa-solid fa-check me-1"></i> Zero Conflicts</span>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Features Section -->
-<div id="features" class="py-5">
-    <div class="text-center mb-5">
-        <h2 class="fw-bold">Designed for Modern Academia</h2>
-        <p class="text-muted">Everything you need to automate your institution's schedules.</p>
-    </div>
-    <div class="row g-4">
-        <!-- Feature 1 -->
-        <div class="col-md-4">
-            <div class="card h-100 p-4 border-0 bg-white">
-                <div class="text-primary mb-3"><i class="fa-solid fa-bolt fs-1"></i></div>
-                <h4 class="fw-bold">Smart Algorithm</h4>
-                <p class="text-muted">Automatically maps subjects, faculties, and rooms while completely avoiding time and room clashes.</p>
-            </div>
-        </div>
-        <!-- Feature 2 -->
-        <div class="col-md-4">
-            <div class="card h-100 p-4 border-0 bg-white">
-                <div class="text-primary mb-3"><i class="fa-solid fa-shoe-prints fs-1"></i></div>
-                <h4 class="fw-bold">Step-by-Step UI</h4>
-                <p class="text-muted">A beautiful 6-step wizard guides you to collect requirements before generating the grid.</p>
-            </div>
-        </div>
-        <!-- Feature 3 -->
-        <div class="col-md-4">
-            <div class="card h-100 p-4 border-0 bg-white">
-                <div class="text-primary mb-3"><i class="fa-solid fa-file-pdf fs-1"></i></div>
-                <h4 class="fw-bold">PDF Export</h4>
-                <p class="text-muted">Export your generated conflict-free grid into a neat print-ready PDF with a single click.</p>
+            <div class="text-center mt-3 border-top pt-2">
+                <button class="btn btn-sm btn-outline-danger px-4 rounded-pill"><i class="fa-regular fa-file-pdf"></i> PDF</button>
             </div>
         </div>
     </div>
