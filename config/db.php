@@ -25,7 +25,11 @@ $options = [
 ];
 
 try {
-    if (!$is_local) { $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false; }
+    if (!$is_local) { 
+        $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = true; 
+        // Render/Ubuntu standard CA bundle path
+        $options[PDO::MYSQL_ATTR_SSL_CA] = '/etc/ssl/certs/ca-certificates.crt';
+    }
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
     die("Database connection failed: " . $e->getMessage());
