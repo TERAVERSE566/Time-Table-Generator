@@ -28,7 +28,6 @@ try {
     if (!$is_local) { $options[PDO::MYSQL_ATTR_SSL_VERIFY_SERVER_CERT] = false; }
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    if ($is_local) throw new \PDOException($e->getMessage(), (int)$e->getCode());
-    else die("Database connection failed. Please check logs.");
+    die("Database connection failed: " . $e->getMessage());
 }
 ?>
