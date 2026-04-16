@@ -140,485 +140,1056 @@ $hasPrerequisites = (count($courseArray) > 0 && $slotCount > 0 && $roomCount > 0
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TimetableGen · Smart Generator</title>
-    <!-- Font Awesome 6 -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="premium.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        *, *::before, *::after {
+            margin: 0; padding: 0; box-sizing: border-box;
         }
 
         :root {
-            --navy: #0a3b5b;
-            --navy-light: #1e4f6e;
-            --gold: #f4c542;
-            --bg-light: #f4f7fc;
-            --white: #ffffff;
-            --gray-100: #f1f5f9;
-            --gray-300: #cbd5e1;
-            --gray-600: #475569;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --danger: #ef4444;
-            --shadow-md: 0 20px 30px -10px rgba(10,59,91,0.2);
-            --border-radius: 2rem;
+            --bg-primary: #0b1120;
+            --bg-secondary: #111827;
+            --bg-card: rgba(17, 24, 39, 0.7);
+            --bg-glass: rgba(255,255,255, 0.04);
+            --border-glass: rgba(255,255,255, 0.08);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent-1: #6366f1;     /* indigo */
+            --accent-2: #8b5cf6;     /* violet */
+            --accent-3: #a78bfa;     /* light violet */
+            --gold: #fbbf24;
+            --success: #34d399;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --info: #38bdf8;
+            --gradient-primary: linear-gradient(135deg, #6366f1, #8b5cf6, #a78bfa);
+            --gradient-warm: linear-gradient(135deg, #f59e0b, #ef4444);
+            --gradient-cool: linear-gradient(135deg, #06b6d4, #3b82f6);
+            --gradient-success: linear-gradient(135deg, #10b981, #34d399);
+            --shadow-glow: 0 0 40px rgba(99,102,241,0.15);
+            --shadow-card: 0 8px 32px rgba(0,0,0,0.3);
+            --radius-xl: 1.5rem;
+            --radius-2xl: 2rem;
+            --radius-pill: 100px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         body {
-            background: var(--bg-light);
-            padding: 2rem;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             min-height: 100vh;
+            padding: 1.5rem;
+            overflow-x: hidden;
+        }
+
+        /* Ambient background glow */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle at 30% 20%, rgba(99,102,241,0.08) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(139,92,246,0.06) 0%, transparent 50%),
+                        radial-gradient(circle at 50% 50%, rgba(6,182,212,0.04) 0%, transparent 60%);
+            z-index: -1;
+            animation: ambientShift 20s ease-in-out infinite alternate;
+        }
+        @keyframes ambientShift {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(-2%, 2%) scale(1.05); }
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 960px;
             margin: 0 auto;
         }
 
-        /* header */
+        /* ===== HEADER ===== */
         .header-section {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            margin-bottom: 2rem;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid var(--border-glass);
         }
         .header-title h1 {
-            font-size: 2.8rem;
-            color: var(--navy);
+            font-size: 2rem;
+            font-weight: 800;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.03em;
         }
         .header-title p {
-            color: var(--gray-600);
-            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-top: 0.3rem;
         }
-        .year-selector {
-            background: white;
-            padding: 0.5rem 1.5rem;
-            border-radius: 50px;
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        .header-chip {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-glass);
+            backdrop-filter: blur(12px);
+            padding: 0.5rem 1.2rem;
+            border-radius: var(--radius-pill);
             font-weight: 600;
-            border: 1px solid var(--gray-300);
-        }
-        
-        .dark-mode-toggle {
-            background: var(--gray-300);
-            border: none;
-            border-radius: 30px;
-            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
             cursor: pointer;
-            font-weight: 600;
-            transition: 0.3s;
-            margin-left: 1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .header-chip:hover {
+            background: rgba(255,255,255,0.08);
+            color: var(--text-primary);
+            border-color: rgba(255,255,255,0.15);
+        }
+        select.header-chip {
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            padding-right: 2.2rem;
+        }
+        select.header-chip option {
+            background: #1e293b;
+            color: #f1f5f9;
         }
 
-        /* ===== PROPER DARK MODE ===== */
-        body.dark-mode {
-            background: #0f172a !important;
-            color: #e2e8f0 !important;
-        }
-        body.dark-mode .step-panel, 
-        body.dark-mode .progress-container,
-        body.dark-mode .alt-card,
-        body.dark-mode [style*="background: white"],
-        body.dark-mode [style*="background:white"] {
-            background: #1e293b !important;
-            border: 1px solid #334155 !important;
-            color: #e2e8f0 !important;
-        }
-        body.dark-mode .header-title h1,
-        body.dark-mode h2, body.dark-mode h3 { color: #f1f5f9 !important; }
-        body.dark-mode .form-group label { color: #94a3b8 !important; }
-        body.dark-mode input, body.dark-mode select { background: #334155 !important; border-color: #475569 !important; color: white !important; }
-        body.dark-mode .course-row { background: #334155 !important; }
-        body.dark-mode .timetable-header { background: #334155 !important; }
-        body.dark-mode .time-slot { background: #475569 !important; }
-        body.dark-mode .class-cell { background: #1e4f6e !important; color: white !important; }
-        body.dark-mode .class-cell[style*="background:#e0f2fe"] { background: #0c4a6e !important; }
-        body.dark-mode .stat-card { background: #334155 !important; }
-
-        /* wizard progress */
+        /* ===== WIZARD STEPPER ===== */
         .wizard-progress {
             display: flex;
+            align-items: flex-start;
             justify-content: space-between;
-            margin: 2rem 0 3rem;
+            margin: 0 0 2.5rem;
             position: relative;
+            padding: 0 1rem;
         }
         .wizard-progress::before {
             content: '';
             position: absolute;
-            top: 20px; left: 0; right: 0;
-            height: 4px;
-            background: var(--gray-300);
+            top: 22px;
+            left: calc(10% + 10px);
+            right: calc(10% + 10px);
+            height: 3px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 3px;
             z-index: 1;
+        }
+        .wizard-progress .progress-line {
+            position: absolute;
+            top: 22px;
+            left: calc(10% + 10px);
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 3px;
+            z-index: 2;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 0%;
+            box-shadow: 0 0 12px rgba(99,102,241,0.4);
         }
         .step {
             position: relative;
-            z-index: 2;
-            background: var(--bg-light);
-            padding: 0 1rem;
+            z-index: 3;
             text-align: center;
+            flex: 1;
+            cursor: pointer;
         }
         .step .circle {
-            width: 50px;
-            height: 50px;
-            background: white;
-            border: 3px solid var(--gray-300);
+            width: 46px;
+            height: 46px;
+            background: var(--bg-secondary);
+            border: 2px solid rgba(255,255,255,0.1);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            margin: 0 auto 0.5rem;
-            transition: 0.2s;
+            font-size: 0.9rem;
+            margin: 0 auto 0.6rem;
+            transition: var(--transition);
+            color: var(--text-muted);
+        }
+        .step span {
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: var(--transition);
         }
         .step.active .circle {
-            border-color: var(--gold);
-            background: var(--navy);
+            background: var(--gradient-primary);
+            border-color: transparent;
             color: white;
+            box-shadow: 0 0 24px rgba(99,102,241,0.4);
+            transform: scale(1.1);
         }
+        .step.active span { color: var(--accent-3); }
         .step.completed .circle {
             background: var(--success);
-            border-color: var(--success);
+            border-color: transparent;
             color: white;
         }
+        .step.completed .circle::after {
+            content: '✓';
+            font-size: 1.1rem;
+        }
+        .step.completed .circle span { display: none; }
+        .step.completed span { color: var(--success); }
 
-        /* step panels */
+        /* ===== GLASS PANELS ===== */
         .step-panel {
             display: none;
-            background: white;
-            border-radius: 3rem;
-            padding: 2rem;
-            box-shadow: var(--shadow-md);
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            box-shadow: var(--shadow-card);
             margin-bottom: 2rem;
+            animation: panelSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .step-panel.active {
-            display: block;
+        .step-panel.active { display: block; }
+        @keyframes panelSlideIn {
+            from { opacity: 0; transform: translateY(16px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
+        .step-panel h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .step-panel h2 .step-badge {
+            background: var(--gradient-primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 0.25rem 0.7rem;
+            border-radius: var(--radius-pill);
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+
+        /* ===== FORM CONTROLS ===== */
         .form-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 1.5rem;
-            margin: 1.5rem 0;
+            margin: 1.5rem 0 2rem;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
         .form-group label {
             font-weight: 600;
-            color: var(--navy);
-            display: block;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
-        .form-group input, .form-group select {
+        .form-group select,
+        .form-group input[type="text"],
+        .form-group input:not([type="range"]):not([type="checkbox"]) {
             width: 100%;
-            padding: 0.8rem 1.2rem;
-            border-radius: 50px;
-            border: 1px solid var(--gray-300);
-            background: var(--gray-100);
+            padding: 0.85rem 1.2rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04);
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: var(--transition);
+            appearance: none;
+            -webkit-appearance: none;
+            outline: none;
+        }
+        .form-group select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
+            cursor: pointer;
+        }
+        .form-group select option {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+        .form-group select:focus,
+        .form-group input:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+            background: rgba(99,102,241,0.06);
         }
 
+        /* Range slider */
+        .form-group input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            outline: none;
+            margin-top: 0.5rem;
+        }
+        .form-group input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            cursor: pointer;
+            box-shadow: 0 0 12px rgba(99,102,241,0.4);
+            transition: var(--transition);
+        }
+        .form-group input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        /* ===== COURSE ROWS ===== */
+        .courses-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.6rem;
+        }
         .course-row {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            background: var(--gray-100);
-            padding: 0.8rem 1.5rem;
-            border-radius: 50px;
-            margin: 0.5rem 0;
+            gap: 0.8rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 0.85rem 1.2rem;
+            border-radius: var(--radius-xl);
+            transition: var(--transition);
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .course-row:hover {
+            background: rgba(99,102,241,0.08);
+            border-color: rgba(99,102,241,0.2);
+        }
+        /* Custom checkbox */
+        .course-row input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.15);
+            border-radius: 6px;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+            flex-shrink: 0;
+        }
+        .course-row input[type="checkbox"]:checked {
+            background: var(--gradient-primary);
+            border-color: transparent;
+        }
+        .course-row input[type="checkbox"]:checked::after {
+            content: '✓';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 700;
+        }
+        .course-code {
+            font-weight: 700;
+            color: var(--accent-3);
+            font-size: 0.8rem;
+            background: rgba(139,92,246,0.1);
+            padding: 0.15rem 0.5rem;
+            border-radius: 6px;
+            flex-shrink: 0;
+        }
+        .course-name {
+            color: var(--text-secondary);
         }
 
-        .constraint-slider {
+        /* ===== FACULTY ASSIGNMENT ===== */
+        .faculty-row {
             display: flex;
+            align-items: center;
             gap: 1rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 0.8rem 1.2rem;
+            border-radius: var(--radius-xl);
+            margin-bottom: 0.6rem;
+            transition: var(--transition);
+        }
+        .faculty-row:hover {
+            background: rgba(99,102,241,0.05);
+            border-color: rgba(99,102,241,0.15);
+        }
+        .faculty-row .fac-course-label {
+            flex: 1;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        .faculty-row select {
+            flex: 1;
+            padding: 0.6rem 1rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.04);
+            color: var(--text-primary);
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: var(--transition);
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.8rem center;
+            padding-right: 2rem;
+        }
+        .faculty-row select option {
+            background: #1e293b;
+            color: #f1f5f9;
+        }
+        .faculty-row select:focus {
+            border-color: var(--accent-1);
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 0.85rem 2rem;
+            border-radius: var(--radius-pill);
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 20px rgba(99,102,241,0.3);
+            letter-spacing: 0.01em;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(99,102,241,0.5);
+        }
+        .btn-primary:active { transform: translateY(0); }
+
+        .btn-outline {
+            background: transparent;
+            border: 1.5px solid rgba(255,255,255,0.12);
+            color: var(--text-secondary);
+            padding: 0.85rem 2rem;
+            border-radius: var(--radius-pill);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-outline:hover {
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.2);
+            color: var(--text-primary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: 2rem;
             align-items: center;
         }
 
-        /* generation progress */
-        .progress-container {
-            background: white;
-            border-radius: 4rem;
-            padding: 2rem;
-            margin: 2rem 0;
-            box-shadow: var(--shadow-md);
-        }
-        .progress-bar {
-            height: 20px;
-            background: var(--gray-300);
-            border-radius: 30px;
+        .btn-generate {
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: var(--radius-pill);
+            font-weight: 700;
+            font-size: 1.05rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 24px rgba(99,102,241,0.35);
+            position: relative;
             overflow: hidden;
         }
-        .progress-fill {
-            height: 20px;
-            background: var(--gold);
-            width: 0%;
-            transition: width 0.3s;
+        .btn-generate::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 200%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+            transition: left 0.6s;
+        }
+        .btn-generate:hover::before { left: 100%; }
+        .btn-generate:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 36px rgba(99,102,241,0.5);
         }
 
-        /* timetable preview grid */
+        /* ===== PROGRESS PANEL ===== */
+        .progress-container {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-card);
+            text-align: center;
+        }
+        .progress-container h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 1.2rem;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 8px;
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 16px rgba(99,102,241,0.5);
+            position: relative;
+        }
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            right: 0; top: 0;
+            width: 30px; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3));
+            animation: progressShimmer 1.5s ease-in-out infinite;
+        }
+        @keyframes progressShimmer {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.8; }
+        }
+        #genStatus {
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ===== RESULTS PANEL ===== */
+        .results-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-2xl);
+            padding: 2.5rem;
+            margin: 2rem 0;
+            box-shadow: var(--shadow-card);
+        }
+        .results-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Stat cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            padding: 1.2rem;
+            border-radius: var(--radius-xl);
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .stat-card:nth-child(1) { background: linear-gradient(135deg, rgba(99,102,241,0.15), rgba(139,92,246,0.08)); color: var(--accent-3); }
+        .stat-card:nth-child(2) { background: linear-gradient(135deg, rgba(6,182,212,0.15), rgba(59,130,246,0.08)); color: var(--info); }
+        .stat-card:nth-child(3) { background: linear-gradient(135deg, rgba(16,185,129,0.15), rgba(52,211,153,0.08)); color: var(--success); }
+        .stat-card:nth-child(4) { background: linear-gradient(135deg, rgba(251,191,36,0.15), rgba(245,158,11,0.08)); color: var(--gold); }
+
+        /* Timetable grid */
         .timetable-grid {
             display: grid;
-            grid-template-columns: 100px repeat(5, 1fr);
-            gap: 0.5rem;
-            margin: 2rem 0;
+            grid-template-columns: 90px repeat(5, 1fr);
+            gap: 4px;
+            margin: 1.5rem 0 2rem;
             overflow-x: auto;
         }
         .timetable-header {
             font-weight: 700;
-            padding: 0.8rem;
-            background: var(--navy);
+            font-size: 0.8rem;
+            padding: 0.75rem 0.5rem;
+            background: var(--gradient-primary);
             color: white;
-            border-radius: 1rem;
             text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
+        .timetable-header:first-child { border-radius: var(--radius-xl) 0 0 0; }
+        .timetable-header:last-child { border-radius: 0 var(--radius-xl) 0 0; }
         .time-slot {
-            background: var(--gray-100);
-            padding: 0.8rem;
-            border-radius: 1rem;
+            background: rgba(255,255,255,0.04);
+            padding: 0.7rem 0.4rem;
             text-align: center;
             font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border: 1px solid rgba(255,255,255,0.03);
         }
         .class-cell {
-            background: #e0f2fe;
-            padding: 0.8rem;
-            border-radius: 1rem;
-            font-size: 0.9rem;
+            background: rgba(99,102,241,0.08);
+            border: 1px solid rgba(99,102,241,0.12);
+            padding: 0.6rem 0.4rem;
+            font-size: 0.78rem;
             cursor: pointer;
-            transition: 0.1s;
+            transition: var(--transition);
+            text-align: center;
+            line-height: 1.3;
         }
-        .class-cell:hover { transform: scale(1.02); background: #bae6fd; }
+        .class-cell:hover {
+            transform: scale(1.03);
+            background: rgba(99,102,241,0.18);
+            border-color: rgba(99,102,241,0.3);
+            z-index: 1;
+        }
+        .class-cell b { color: var(--accent-3); font-size: 0.82rem; }
+        .class-cell small { color: var(--text-muted); }
 
-        .conflict-badge {
-            background: var(--danger);
-            color: white;
-            padding: 0.3rem 1rem;
-            border-radius: 30px;
-            display: inline-block;
+        .conflict-report {
+            background: rgba(248,113,113,0.08);
+            border: 1px solid rgba(248,113,113,0.15);
+            border-radius: var(--radius-xl);
+            padding: 1.2rem 1.5rem;
+            margin: 1.5rem 0;
         }
+        .conflict-report h4 { color: var(--danger); margin-bottom: 0.5rem; }
+        .conflict-report ul { margin-left: 1.2rem; color: var(--text-secondary); font-size: 0.9rem; }
+        .conflict-report li { margin-bottom: 0.3rem; }
 
         .export-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 0.6rem;
             flex-wrap: wrap;
             margin: 2rem 0;
         }
-        .btn-primary {
-            background: var(--navy);
-            color: white;
-            border: none;
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .btn-primary:hover { background: var(--navy-light); }
-        .btn-outline {
-            background: white;
-            border: 2px solid var(--navy);
-            color: var(--navy);
-            padding: 0.8rem 2rem;
-            border-radius: 50px;
-            font-weight: 600;
-            cursor: pointer;
-        }
 
-        /* alternative thumbnails */
         .alternatives {
-            display: flex;
-            gap: 1rem;
-            margin: 2rem 0;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+            margin: 1.5rem 0;
         }
         .alt-card {
-            background: white;
-            border-radius: 2rem;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            border-radius: var(--radius-xl);
             padding: 1rem;
-            box-shadow: var(--shadow-md);
-            flex: 1;
             text-align: center;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
         }
+        .alt-card:hover {
+            background: rgba(99,102,241,0.08);
+            border-color: rgba(99,102,241,0.2);
+            color: var(--text-primary);
+        }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            color: var(--text-primary);
+            padding: 1rem 1.8rem;
+            border-radius: var(--radius-pill);
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            z-index: 9999;
+            animation: toastIn 0.3s ease;
+        }
+        @keyframes toastIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== PREREQUISITE WARNING ===== */
+        .prereq-warning {
+            background: rgba(251,191,36,0.08);
+            border: 1px solid rgba(251,191,36,0.2);
+            border-radius: var(--radius-2xl);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.5s ease;
+        }
+        .prereq-warning h3 { color: var(--gold); margin-bottom: 0.5rem; }
+        .prereq-warning p { color: var(--text-secondary); margin-bottom: 1rem; }
+        .prereq-warning ul { margin-left: 1.5rem; margin-bottom: 1.5rem; color: var(--text-secondary); }
+        .prereq-warning li { margin-bottom: 0.3rem; }
+        .prereq-warning a.seed-btn {
+            background: var(--gradient-warm);
+            color: white;
+            padding: 0.7rem 1.8rem;
+            border-radius: var(--radius-pill);
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: var(--transition);
+        }
+        .prereq-warning a.seed-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(245,158,11,0.3); }
+
+        /* ===== SELECTED COUNTER ===== */
+        .selection-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            padding: 0.6rem 1rem;
+            background: rgba(99,102,241,0.06);
+            border: 1px solid rgba(99,102,241,0.12);
+            border-radius: var(--radius-xl);
+        }
+        .selection-info span {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+        .selection-info strong {
+            color: var(--accent-3);
+        }
+        .select-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        .select-actions button {
+            background: none;
+            border: none;
+            color: var(--accent-1);
+            font-size: 0.78rem;
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            transition: var(--transition);
+        }
+        .select-actions button:hover { background: rgba(99,102,241,0.1); }
+
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
-            body { padding: 1rem; }
-            .header-section { flex-direction: column; align-items: flex-start; gap: 1rem; }
-            .wizard-progress { flex-direction: column; align-items: flex-start; gap: 1rem; padding-left: 2rem; }
-            .wizard-progress::before { top: 0; bottom: 0; left: 45px; height: 100%; width: 4px; }
-            .step { display: flex; align-items: center; gap: 1rem; text-align: left; }
-            .step .circle { margin: 0; }
+            body { padding: 0.8rem; }
+            .container { max-width: 100%; }
+            .header-section { flex-direction: column; align-items: flex-start; }
+            .header-actions { flex-wrap: wrap; }
+            .wizard-progress { gap: 0; }
+            .wizard-progress::before, .wizard-progress .progress-line { display: none; }
+            .step .circle { width: 36px; height: 36px; font-size: 0.8rem; }
+            .step span { font-size: 0.65rem; }
+            .step-panel { padding: 1.5rem; border-radius: var(--radius-xl); }
             .form-grid { grid-template-columns: 1fr; }
-            .timetable-grid { display: block; overflow-x: auto; white-space: nowrap; }
-            .step-panel { padding: 1.5rem; }
+            .courses-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .alternatives { grid-template-columns: 1fr; }
+            .btn-group { flex-wrap: wrap; }
+            .timetable-grid { font-size: 0.7rem; }
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <!-- header -->
+    <!-- HEADER -->
     <div class="header-section">
         <div class="header-title">
-            <h1>⚡ Smart Timetable Generator</h1>
-            <p>Generate optimal timetables with AI-powered algorithms</p>
+            <h1><i class="fas fa-bolt"></i> Smart Timetable Generator</h1>
+            <p>Generate conflict-free schedules with intelligent algorithms</p>
         </div>
-        <div style="display: flex; align-items: center;">
-            <select class="year-selector">
-                <option>Academic Year 2024-25</option>
+        <div class="header-actions">
+            <select class="header-chip">
+                <option>2024-25</option>
                 <option>2025-26</option>
             </select>
-            <button class="dark-mode-toggle" id="darkToggle"><i class="fas fa-moon"></i> Dark</button>
-            <button class="btn-outline" style="margin-left: 1rem; border-radius: 30px; padding: 0.5rem 1rem;" onclick="window.location.href='admin.php'"><i class="fas fa-arrow-left"></i> Home</button>
+            <button class="header-chip" id="darkToggle"><i class="fas fa-sun"></i> Theme</button>
+            <button class="header-chip" onclick="window.location.href='admin.php'"><i class="fas fa-arrow-left"></i> Dashboard</button>
         </div>
     </div>
 
-    <!-- wizard steps -->
+    <!-- WIZARD STEPPER -->
     <div class="wizard-progress">
-        <div class="step active" data-step="1"><div class="circle">1</div><span>Basic</span></div>
-        <div class="step" data-step="2"><div class="circle">2</div><span>Courses</span></div>
-        <div class="step" data-step="3"><div class="circle">3</div><span>Faculty</span></div>
-        <div class="step" data-step="4"><div class="circle">4</div><span>Constraints</span></div>
-        <div class="step" data-step="5"><div class="circle">5</div><span>Advanced</span></div>
+        <div class="progress-line" id="progressLine"></div>
+        <div class="step active" data-step="1"><div class="circle"><span>1</span></div><span>Basic</span></div>
+        <div class="step" data-step="2"><div class="circle"><span>2</span></div><span>Courses</span></div>
+        <div class="step" data-step="3"><div class="circle"><span>3</span></div><span>Faculty</span></div>
+        <div class="step" data-step="4"><div class="circle"><span>4</span></div><span>Constraints</span></div>
+        <div class="step" data-step="5"><div class="circle"><span>5</span></div><span>Generate</span></div>
     </div>
 
     <!-- Prerequisite Warning -->
     <?php if (!$hasPrerequisites): ?>
-    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); border: 2px solid #f59e0b; border-radius: 2rem; padding: 2rem; margin-bottom: 2rem; animation: fadeInUp 0.5s ease;">
-        <h3 style="color: #92400e; margin-bottom: 0.5rem;">⚠️ Missing Data — Generator Cannot Run</h3>
-        <p style="color: #78350f; margin-bottom: 1rem;">The following data is required before you can generate a timetable:</p>
-        <ul style="color: #78350f; margin-left: 1.5rem; margin-bottom: 1.5rem;">
-            <?php if (count($courseArray) == 0): ?><li>❌ <strong>Courses</strong> — No active courses found. <a href="course.php" style="color:#1d4ed8;">Add courses →</a></li><?php else: ?><li>✅ Courses: <?= count($courseArray) ?> found</li><?php endif; ?>
-            <?php if ($roomCount == 0): ?><li>❌ <strong>Rooms</strong> — No rooms found. <a href="roomM.php" style="color:#1d4ed8;">Add rooms →</a></li><?php else: ?><li>✅ Rooms: <?= $roomCount ?> found</li><?php endif; ?>
-            <?php if ($slotCount == 0): ?><li>❌ <strong>Time Slots</strong> — No time slots configured.</li><?php else: ?><li>✅ Time Slots: <?= $slotCount ?> found</li><?php endif; ?>
+    <div class="prereq-warning">
+        <h3>⚠️ Missing Data — Generator Cannot Run</h3>
+        <p>The following data is required before you can generate a timetable:</p>
+        <ul>
+            <?php if (count($courseArray) == 0): ?><li>❌ <strong>Courses</strong> — No active courses. <a href="course.php" style="color:var(--info);">Add courses →</a></li><?php else: ?><li>✅ Courses: <?= count($courseArray) ?> found</li><?php endif; ?>
+            <?php if ($roomCount == 0): ?><li>❌ <strong>Rooms</strong> — No rooms. <a href="roomM.php" style="color:var(--info);">Add rooms →</a></li><?php else: ?><li>✅ Rooms: <?= $roomCount ?> found</li><?php endif; ?>
+            <?php if ($slotCount == 0): ?><li>❌ <strong>Time Slots</strong> — Not configured.</li><?php else: ?><li>✅ Time Slots: <?= $slotCount ?> found</li><?php endif; ?>
         </ul>
-        <a href="seed_data.php" style="background: #92400e; color: white; padding: 0.7rem 1.8rem; border-radius: 50px; text-decoration: none; font-weight: 600;">🌱 Run Auto-Seeder</a>
+        <a href="seed_data.php" class="seed-btn">🌱 Run Auto-Seeder</a>
     </div>
     <?php endif; ?>
 
     <!-- STEP 1: Basic Parameters -->
     <div id="step1" class="step-panel active">
-        <h2>📋 Basic Parameters</h2>
+        <h2>📋 Basic Parameters <span class="step-badge">Step 1 of 5</span></h2>
         <div class="form-grid">
             <div class="form-group">
-                <label>Department</label>
+                <label><i class="fas fa-building"></i> Department</label>
                 <select id="selDept">
                     <?php foreach($deptArray as $d): ?>
-                        <option value="<?= htmlspecialchars($d['code']) ?>"><?= htmlspecialchars($d['code']) ?> - <?= htmlspecialchars($d['name']) ?></option>
+                        <option value="<?= htmlspecialchars($d['code']) ?>"><?= htmlspecialchars($d['code']) ?> — <?= htmlspecialchars($d['name']) ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
-            <div class="form-group"><label>Semester</label><select id="selSem"><option value="1">1</option><option value="2">2</option><option value="3" selected>3</option><option value="4">4</option></select></div>
-            <div class="form-group"><label>Section</label><select id="selSec"><option value="A">A</option><option value="B">B</option></select></div>
-            <div class="form-group"><label>Term</label><select><option>Odd (Aug-Dec)</option><option>Even (Jan-Apr)</option></select></div>
+            <div class="form-group">
+                <label><i class="fas fa-layer-group"></i> Semester</label>
+                <select id="selSem">
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3" selected>Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-users"></i> Section</label>
+                <select id="selSec">
+                    <option value="A">Section A</option>
+                    <option value="B">Section B</option>
+                    <option value="C">Section C</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-calendar-alt"></i> Term</label>
+                <select>
+                    <option>Odd (Aug – Dec)</option>
+                    <option>Even (Jan – Apr)</option>
+                </select>
+            </div>
         </div>
-        <button class="btn-primary next-step" data-next="2">Next: Courses →</button>
+        <div class="btn-group">
+            <button class="btn-primary next-step" data-next="2"><i class="fas fa-arrow-right"></i> Continue to Courses</button>
+        </div>
     </div>
 
     <!-- STEP 2: Course Selection -->
     <div id="step2" class="step-panel">
-        <h2>📚 Select Courses</h2>
-        <div id="courseContainer">
+        <h2>📚 Select Courses <span class="step-badge">Step 2 of 5</span></h2>
+        <div class="selection-info">
+            <span><strong id="selectedCount"><?= count($courseArray) ?></strong> of <?= count($courseArray) ?> courses selected</span>
+            <div class="select-actions">
+                <button onclick="toggleAllCourses(true)">Select All</button>
+                <button onclick="toggleAllCourses(false)">Deselect All</button>
+            </div>
+        </div>
+        <div id="courseContainer" class="courses-grid">
             <?php foreach($courseArray as $c): ?>
-            <div class="course-row">
-                <input type="checkbox" class="course-chk" value="<?= $c['id'] ?>" data-name="<?= htmlspecialchars($c['course_name']) ?>" checked> 
-                <?= htmlspecialchars($c['course_code']) ?> - <?= htmlspecialchars($c['course_name']) ?>
+            <div class="course-row" onclick="this.querySelector('input').click()">
+                <input type="checkbox" class="course-chk" value="<?= $c['id'] ?>" data-name="<?= htmlspecialchars($c['course_name']) ?>" checked onclick="event.stopPropagation(); updateCourseCount();">
+                <span class="course-code"><?= htmlspecialchars($c['course_code']) ?></span>
+                <span class="course-name"><?= htmlspecialchars($c['course_name']) ?></span>
             </div>
             <?php endforeach; ?>
         </div>
-        <div style="margin-top:2rem;">
-            <button class="btn-outline prev-step">← Previous</button>
-            <button class="btn-primary next-step" data-next="3" id="btnNextCourse">Next: Faculty →</button>
+        <div class="btn-group">
+            <button class="btn-outline prev-step"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn-primary next-step" data-next="3" id="btnNextCourse"><i class="fas fa-arrow-right"></i> Continue to Faculty</button>
         </div>
     </div>
 
     <!-- STEP 3: Faculty Assignment -->
     <div id="step3" class="step-panel">
-        <h2>👨‍🏫 Assign Faculty</h2>
+        <h2>👨‍🏫 Assign Faculty <span class="step-badge">Step 3 of 5</span></h2>
+        <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">Map each selected course to a faculty member.</p>
         <div id="facultyContainer">
-            <!-- Dynamically populated based on selected courses -->
+            <!-- Dynamically populated -->
         </div>
-        <div>
-            <button class="btn-outline prev-step" style="margin-top:1rem;">← Previous</button>
-            <button class="btn-primary next-step" data-next="4" style="margin-top:1rem;">Next: Constraints →</button>
+        <div class="btn-group">
+            <button class="btn-outline prev-step"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn-primary next-step" data-next="4"><i class="fas fa-arrow-right"></i> Continue to Constraints</button>
         </div>
     </div>
 
     <!-- STEP 4: Constraints -->
     <div id="step4" class="step-panel">
-        <h2>⚙️ Constraints & Preferences</h2>
-        <div class="form-group"><label>Max classes/day</label><input type="range" min="4" max="8" value="6"></div>
-        <div class="form-group"><label>Break times</label><input value="12:00-13:00"></div>
-        <div class="form-group"><label>Faculty unavailability</label><input placeholder="e.g., Dr. Chen unavailable Mon 10-12"></div>
-        <button class="btn-primary next-step" data-next="5">Next: Advanced →</button>
+        <h2>⚙️ Constraints & Preferences <span class="step-badge">Step 4 of 5</span></h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label><i class="fas fa-sliders-h"></i> Max Classes per Day: <strong id="maxClassVal">6</strong></label>
+                <input type="range" min="4" max="8" value="6" oninput="document.getElementById('maxClassVal').textContent=this.value">
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-coffee"></i> Break Time</label>
+                <input value="12:00 – 13:00" placeholder="e.g., 12:00-13:00">
+            </div>
+        </div>
+        <div class="form-group" style="margin-top:0.5rem;">
+            <label><i class="fas fa-user-clock"></i> Faculty Unavailability</label>
+            <input placeholder="e.g., Dr. Patel unavailable Mon 10-12">
+        </div>
+        <div class="btn-group">
+            <button class="btn-outline prev-step"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn-primary next-step" data-next="5"><i class="fas fa-arrow-right"></i> Continue to Generate</button>
+        </div>
     </div>
 
     <!-- STEP 5: Advanced Options -->
     <div id="step5" class="step-panel">
-        <h2>🧠 Advanced AI Options</h2>
-        <div class="form-group"><label>Algorithm</label><select><option>Genetic Algorithm</option><option>Backtracking</option><option>Hybrid</option></select></div>
-        <div class="form-group"><label>Optimization priority</label><select><option>Faculty preference</option><option>Room utilization</option></select></div>
-        <button class="btn-primary" id="generateBtn">✨ Generate Timetable</button>
+        <h2>🧠 Advanced AI Options <span class="step-badge">Step 5 of 5</span></h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label><i class="fas fa-microchip"></i> Algorithm</label>
+                <select>
+                    <option>Genetic Algorithm</option>
+                    <option>Backtracking</option>
+                    <option>Hybrid (Recommended)</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label><i class="fas fa-crosshairs"></i> Optimization Priority</label>
+                <select>
+                    <option>Faculty Preference</option>
+                    <option>Room Utilization</option>
+                    <option>Balanced</option>
+                </select>
+            </div>
+        </div>
+        <div class="btn-group">
+            <button class="btn-outline prev-step"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn-generate" id="generateBtn"><i class="fas fa-wand-magic-sparkles"></i> Generate Timetable</button>
+        </div>
     </div>
 
-    <!-- Generation Progress (hidden initially) -->
+    <!-- GENERATION PROGRESS -->
     <div id="progressPanel" class="progress-container" style="display: none;">
-        <h3>⏳ Generating schedule ...</h3>
+        <h3>⏳ Generating your schedule…</h3>
         <div class="progress-bar"><div class="progress-fill" id="genProgress" style="width:0%"></div></div>
         <p id="genStatus">Initializing genetic algorithm...</p>
-        <p>Estimated time: 5 seconds</p>
-        <button class="btn-outline" id="cancelGen">Cancel</button>
+        <p style="color: var(--text-muted); font-size: 0.85rem;">Estimated time: ~5 seconds</p>
+        <button class="btn-outline" id="cancelGen" style="margin-top:1rem;"><i class="fas fa-times"></i> Cancel</button>
     </div>
 
-    <!-- Results & Timetable Preview (hidden after generation) -->
+    <!-- RESULTS PANEL -->
     <div id="resultsPanel" style="display: none;">
-        <div style="background: white; border-radius: 3rem; padding:2rem; margin:2rem 0;">
-            <h2>✅ Generation complete</h2>
-            <div class="stats-grid" style="display:grid; grid-template-columns:repeat(4,1fr); gap:1rem;">
+        <div class="results-card">
+            <h2>✅ Generation Complete</h2>
+            <div class="stats-grid">
                 <div class="stat-card">📊 Total classes: 245</div>
                 <div class="stat-card">⚡ Conflicts resolved: 12</div>
                 <div class="stat-card">📈 Utilization: 87%</div>
                 <div class="stat-card">⏱️ Time: 3.2s</div>
             </div>
 
-            <h3>📅 Timetable Preview (Week view)</h3>
+            <h3 style="margin-bottom:0.5rem;">📅 Timetable Preview</h3>
             <div class="timetable-grid" id="genTimetableGrid">
-                <div class="timetable-header">Time</div><div class="timetable-header">Monday</div><div class="timetable-header">Tuesday</div><div class="timetable-header">Wednesday</div><div class="timetable-header">Thursday</div><div class="timetable-header">Friday</div>
+                <div class="timetable-header">Time</div><div class="timetable-header">Mon</div><div class="timetable-header">Tue</div><div class="timetable-header">Wed</div><div class="timetable-header">Thu</div><div class="timetable-header">Fri</div>
             </div>
 
-            <!-- conflict report -->
-            <div style="background:#fee2e2; border-radius:2rem; padding:1.5rem; margin:1.5rem 0;">
+            <div class="conflict-report">
                 <h4>⚠️ Unresolved Conflicts (2)</h4>
-                <ul><li>Room LH-101 double-booked Wed 11-12 → suggest moving CS311 to Lab-201</li><li>Dr. Chen assigned to two classes at same time Fri 9-10</li></ul>
+                <ul><li>Room LH-101 double-booked Wed 11-12 → suggest moving CS311 to Lab-201</li><li>Dr. Patel assigned to two classes at same time Fri 9-10</li></ul>
             </div>
 
-            <!-- export options -->
             <div class="export-buttons">
                 <button class="btn-primary" id="exportPdfBtn"><i class="fas fa-file-pdf"></i> Export PDF</button>
                 <button class="btn-primary" id="exportExcelBtn"><i class="fas fa-file-excel"></i> Excel</button>
                 <button class="btn-outline" id="printBtn"><i class="fas fa-print"></i> Print</button>
-                <button class="btn-outline" id="shareBtn"><i class="fas fa-share"></i> Share</button>
+                <button class="btn-outline" id="shareBtn"><i class="fas fa-share-nodes"></i> Share</button>
+                <button class="btn-outline" onclick="location.reload()"><i class="fas fa-redo"></i> New Generation</button>
             </div>
 
-            <!-- alternative versions -->
-            <h3>🔄 Alternative Timetables</h3>
+            <h3 style="margin-top:1.5rem;">🔄 Alternative Timetables</h3>
             <div class="alternatives">
-                <div class="alt-card">Version 2 (92% util)</div>
-                <div class="alt-card">Version 3 (89% util, fewer conflicts)</div>
-                <div class="alt-card">Version 4 (lab-optimized)</div>
+                <div class="alt-card">📊 Version 2 — 92% utilization</div>
+                <div class="alt-card">🏆 Version 3 — Fewer conflicts</div>
+                <div class="alt-card">🔬 Version 4 — Lab-optimized</div>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Toast for messages -->
-<div id="toast" style="position:fixed; bottom:30px; right:30px; background:var(--navy); color:white; padding:1rem 2rem; border-radius:60px; display:none;">✅</div>
+<!-- Toast -->
+<div class="toast" id="toast">✅</div>
 
 <script>
+    // Global helper functions
+    function updateCourseCount() {
+        const el = document.getElementById('selectedCount');
+        if (el) el.textContent = document.querySelectorAll('.course-chk:checked').length;
+    }
+    function toggleAllCourses(state) {
+        document.querySelectorAll('.course-chk').forEach(c => { c.checked = state; });
+        updateCourseCount();
+    }
+
     (function() {
         const facList = <?= json_encode($facultyArray) ?>;
         
         // Step navigation
         const steps = document.querySelectorAll('.step');
         const panels = document.querySelectorAll('.step-panel');
+        const progressLine = document.getElementById('progressLine');
         let currentStep = 1;
 
         function showStep(step) {
@@ -629,6 +1200,12 @@ $hasPrerequisites = (count($courseArray) > 0 && $slotCount > 0 && $roomCount > 0
                 if (idx+1 < step) s.classList.add('completed');
                 else if (idx+1 === step) s.classList.add('active');
             });
+            // Update progress line width
+            if (progressLine) {
+                const totalSteps = steps.length;
+                const pct = ((step - 1) / (totalSteps - 1)) * 100;
+                progressLine.style.width = pct + '%';
+            }
             currentStep = step;
         }
 
@@ -659,8 +1236,9 @@ $hasPrerequisites = (count($courseArray) > 0 && $slotCount > 0 && $roomCount > 0
                 const cId = chk.value;
                 const cName = chk.dataset.name;
                 facContainer.innerHTML += `
-                    <div class="course-row">
-                        ${cName}: <select class="fac-select" data-course="${cId}">${htmlOptions}</select>
+                    <div class="faculty-row">
+                        <span class="fac-course-label">${cName}</span>
+                        <select class="fac-select" data-course="${cId}">${htmlOptions}</select>
                     </div>`;
             });
         });
@@ -678,14 +1256,14 @@ $hasPrerequisites = (count($courseArray) > 0 && $slotCount > 0 && $roomCount > 0
             resultsPanel.style.display = 'none';
 
             let width = 0;
-            const stepTexts = ['Analyzing courses','Assigning faculty','Optimizing rooms','Resolving conflicts','Rendering timetable'];
+            const stepTexts = ['Analyzing courses…','Assigning faculty…','Optimizing rooms…','Resolving conflicts…','Rendering timetable…'];
             
             const interval = setInterval(() => {
-                width += 15;
+                width += 12;
                 progressFill.style.width = width + '%';
-                genStatus.innerText = stepTexts[Math.floor(width/20)] || 'Finalizing...';
+                genStatus.innerText = stepTexts[Math.floor(width/20)] || 'Finalizing…';
                 if(width > 90) clearInterval(interval);
-            }, 300);
+            }, 350);
 
             // gather data
             const selCourses = Array.from(document.querySelectorAll('.course-chk:checked')).map(c => c.value);
@@ -734,7 +1312,7 @@ $hasPrerequisites = (count($courseArray) > 0 && $slotCount > 0 && $roomCount > 0
 
         function renderPreview(entries) {
             const grid = document.getElementById('genTimetableGrid');
-            grid.innerHTML = '<div class="timetable-header">Time</div><div class="timetable-header">Monday</div><div class="timetable-header">Tuesday</div><div class="timetable-header">Wednesday</div><div class="timetable-header">Thursday</div><div class="timetable-header">Friday</div>';
+            grid.innerHTML = '<div class="timetable-header">Time</div><div class="timetable-header">Mon</div><div class="timetable-header">Tue</div><div class="timetable-header">Wed</div><div class="timetable-header">Thu</div><div class="timetable-header">Fri</div>';
             
             const times = ["09:00", "10:00", "11:00", "13:00", "14:00", "15:00"];
             const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
@@ -742,10 +1320,9 @@ $hasPrerequisites = (count($courseArray) > 0 && $slotCount > 0 && $roomCount > 0
             times.forEach(t => {
                 grid.innerHTML += `<div class="time-slot">${t}</div>`;
                 days.forEach(d => {
-                    // find entry for this cell
                     const match = entries.find(e => e.day === d && e.start === t);
                     if(match) {
-                        grid.innerHTML += `<div class="class-cell" style="background:#e0f2fe;"><b>${match.course}</b><br>${match.faculty}<br><small>${match.room}</small></div>`;
+                        grid.innerHTML += `<div class="class-cell"><b>${match.course}</b><br>${match.faculty}<br><small>${match.room}</small></div>`;
                     } else {
                         grid.innerHTML += `<div class="class-cell"></div>`;
                     }
@@ -754,16 +1331,16 @@ $hasPrerequisites = (count($courseArray) > 0 && $slotCount > 0 && $roomCount > 0
         }
 
         // Export Actions
-        const toast = document.getElementById('toast');
+        const toastEl = document.getElementById('toast');
         function showToast(msg) {
-             toast.innerText = msg;
-             toast.style.display = 'flex';
-             setTimeout(() => toast.style.display = 'none', 3000);
+             toastEl.innerText = msg;
+             toastEl.style.display = 'flex';
+             setTimeout(() => toastEl.style.display = 'none', 3000);
         }
 
         document.getElementById('exportPdfBtn').addEventListener('click', () => {
             const element = document.querySelector('.timetable-grid');
-            html2pdf().from(element).save('timetable.pdf').then(()=>showToast('✅ PDF Exported!'));
+            html2pdf().set({margin: 0.5, filename: 'timetable.pdf', jsPDF: {format: 'a4', orientation: 'landscape'}}).from(element).save().then(()=>showToast('✅ PDF Exported!'));
         });
         document.getElementById('printBtn').addEventListener('click', () => window.print());
         
@@ -774,7 +1351,6 @@ $hasPrerequisites = (count($courseArray) > 0 && $slotCount > 0 && $roomCount > 0
                 const headers = ['Time', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
                 rows.push(headers);
                 const cells = Array.from(table.children).slice(6);
-                let currentRowIdx = 0;
                 let currentRow = [];
                 cells.forEach((cell, idx) => {
                     let text = cell.innerText.replace(/\n+/g, ' ').trim();
@@ -796,26 +1372,12 @@ $hasPrerequisites = (count($courseArray) > 0 && $slotCount > 0 && $roomCount > 0
         
         document.getElementById('shareBtn').addEventListener('click', () => {
             navigator.clipboard.writeText(window.location.href);
-            showToast('✅ Link copied to clipboard');
-        });
-
-        // Dark mode setup
-        const darkToggle = document.getElementById('darkToggle');
-        if (localStorage.getItem('darkMode') === 'true') {
-            document.body.classList.add('dark-mode');
-            darkToggle.innerHTML = '<i class="fas fa-sun"></i> Light';
-        }
-        darkToggle.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('darkMode', isDark);
-            darkToggle.innerHTML = isDark ? '<i class="fas fa-sun"></i> Light' : '<i class="fas fa-moon"></i> Dark';
+            showToast('✅ Link copied!');
         });
 
         showStep(1);
     })();
 </script>
-<script src="theme.js"></script>
 </body>
 </html>
 
