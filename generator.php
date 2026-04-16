@@ -28,13 +28,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     $tt_id = $stmtTt->insert_id;
 
     // Fetch all timeslots and rooms to build schedule
-    $tsRes = $conn->query("SELECT id, day_of_week, start_time, end_time FROM time_slots ORDER BY day_of_week, start_time");
+    $tsRes = $conn->query("SELECT id, day_of_week, start_time, end_time FROM time_slots ORDER BY FIELD(day_of_week,'Monday','Tuesday','Wednesday','Thursday','Friday'), start_time");
     $allSlots = [];
     while($r = $tsRes->fetch_assoc()) $allSlots[] = $r;
     
-    $rmRes = $conn->query("SELECT id, name FROM rooms WHERE type='Lecture' OR type='Lecture Hall'");
+    $rmRes = $conn->query("SELECT id, name FROM rooms WHERE type='Lecture Hall' OR type='Lab'");
     $allRooms = [];
     while($r = $rmRes->fetch_assoc()) $allRooms[] = $r;
+
+    // Validate prerequisites before generating
+    if (empty($allSlots)) {
+        echo json_encode(['success' => false, 'error' => 'No time slots found in the database. Please seed the data first.']);
+        exit();
+    }
+    if (empty($allRooms)) {
+        echo json_encode(['success' => false, 'error' => 'No rooms found in the database. Please add rooms first.']);
+        exit();
+    }
+    if (empty($courses)) {
+        echo json_encode(['success' => false, 'error' => 'No courses selected. Please select at least one course.']);
+        exit();
+    }
 
     // Cache names to avoid queries in the loop
     $cNames = [];
@@ -113,6 +127,11 @@ while($r = $res->fetch_assoc()) $courseArray[] = $r;
 $facultyArray = [];
 $res = $conn->query("SELECT id, name FROM users WHERE role='faculty'");
 while($r = $res->fetch_assoc()) $facultyArray[] = $r;
+
+// Prerequisite status for frontend warnings
+$slotCount = $conn->query("SELECT COUNT(*) as c FROM time_slots")->fetch_assoc()['c'];
+$roomCount = $conn->query("SELECT COUNT(*) as c FROM rooms")->fetch_assoc()['c'];
+$hasPrerequisites = (count($courseArray) > 0 && $slotCount > 0 && $roomCount > 0);
 
 ?>
 <!DOCTYPE html>
@@ -461,6 +480,20 @@ while($r = $res->fetch_assoc()) $facultyArray[] = $r;
         <div class="step" data-step="5"><div class="circle">5</div><span>Advanced</span></div>
     </div>
 
+    <!-- Prerequisite Warning -->
+    <?php if (!$hasPrerequisites): ?>
+    <div style="background: linear-gradient(135deg, #fef3c7, #fde68a); border: 2px solid #f59e0b; border-radius: 2rem; padding: 2rem; margin-bottom: 2rem; animation: fadeInUp 0.5s ease;">
+        <h3 style="color: #92400e; margin-bottom: 0.5rem;">⚠️ Missing Data — Generator Cannot Run</h3>
+        <p style="color: #78350f; margin-bottom: 1rem;">The following data is required before you can generate a timetable:</p>
+        <ul style="color: #78350f; margin-left: 1.5rem; margin-bottom: 1.5rem;">
+            <?php if (count($courseArray) == 0): ?><li>❌ <strong>Courses</strong> — No active courses found. <a href="course.php" style="color:#1d4ed8;">Add courses →</a></li><?php else: ?><li>✅ Courses: <?= count($courseArray) ?> found</li><?php endif; ?>
+            <?php if ($roomCount == 0): ?><li>❌ <strong>Rooms</strong> — No rooms found. <a href="roomM.php" style="color:#1d4ed8;">Add rooms →</a></li><?php else: ?><li>✅ Rooms: <?= $roomCount ?> found</li><?php endif; ?>
+            <?php if ($slotCount == 0): ?><li>❌ <strong>Time Slots</strong> — No time slots configured.</li><?php else: ?><li>✅ Time Slots: <?= $slotCount ?> found</li><?php endif; ?>
+        </ul>
+        <a href="seed_data.php" style="background: #92400e; color: white; padding: 0.7rem 1.8rem; border-radius: 50px; text-decoration: none; font-weight: 600;">🌱 Run Auto-Seeder</a>
+    </div>
+    <?php endif; ?>
+
     <!-- STEP 1: Basic Parameters -->
     <div id="step1" class="step-panel active">
         <h2>📋 Basic Parameters</h2>
@@ -671,16 +704,30 @@ while($r = $res->fetch_assoc()) $facultyArray[] = $r;
             .then(r => r.json())
             .then(data => {
                 clearInterval(interval);
+                if (data.success === false) {
+                    progressPanel.style.display = 'none';
+                    alert('⚠️ Generation failed: ' + (data.error || 'Unknown error'));
+                    showStep(5);
+                    return;
+                }
                 progressFill.style.width = '100%';
                 setTimeout(() => {
                     progressPanel.style.display = 'none';
                     resultsPanel.style.display = 'block';
-                    renderPreview(data.entries);
+                    renderPreview(data.entries || []);
+                    const totalClasses = (data.entries || []).length;
+                    document.querySelector('.stats-grid').innerHTML = `
+                        <div class="stat-card">📊 Total classes: ${totalClasses}</div>
+                        <div class="stat-card">⚡ Timetable ID: #${data.tt_id}</div>
+                        <div class="stat-card">📈 Utilization: ${Math.min(100, Math.round(totalClasses / 30 * 100))}%</div>
+                        <div class="stat-card">⏱️ Status: Complete</div>
+                    `;
                     showToast('✅ Timetable generated & saved!');
                 }, 500);
             }).catch(e => {
                 clearInterval(interval);
-                alert("Generation failed: " + e);
+                progressPanel.style.display = 'none';
+                alert('⚠️ Generation failed: ' + e.message);
                 showStep(5);
             });
         });
